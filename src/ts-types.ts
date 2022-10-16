@@ -1,5 +1,3 @@
-import { NewestLikesType } from "./types/types";
-
 export type BloggersType = {
   id: string;
   name: string;
@@ -12,6 +10,13 @@ export type BloggersExtendedType = {
   pageSize: number;
   totalCount: number;
   items: [BloggersType | BloggersType[]];
+};
+
+export type NewestLikesType = {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  addedAt: Object;
+  userId: string;
+  login: string;
 };
 
 export type PostType = {
@@ -28,6 +33,14 @@ export type PostType = {
     myStatus: string;
     newestLikes: [NewestLikesType | NewestLikesType[]];
   };
+};
+
+export type PostsOfBloggerType = {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: [PostType | PostType[]];
 };
 
 export type UsersType = {
