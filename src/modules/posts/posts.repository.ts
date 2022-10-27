@@ -3,8 +3,8 @@ import {
   LikesStatusType,
   PostsOfBloggerType,
   PostType,
-} from '../ts-types';
-import { likesStatusCollection, PostsModel } from '../db';
+} from '../../ts-types';
+import { likesStatusCollection, PostsModel } from '../../db';
 
 @Injectable()
 export class PostsRepository {

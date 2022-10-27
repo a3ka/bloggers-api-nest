@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { BloggersExtendedType, BloggersType } from '../ts-types';
-import { BloggersModel } from '../db';
+import { BloggersExtendedType, BloggersType } from '../../ts-types';
+import { BloggersModel } from '../../db';
 
 @Injectable()
 export class BloggersRepository {

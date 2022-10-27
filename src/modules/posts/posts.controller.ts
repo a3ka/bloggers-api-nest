@@ -14,7 +14,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { jwtService } from '../jwt-service';
+import { jwtService } from '../../jwt-service';
 import { BloggersService } from '../bloggers/bloggers.service';
 
 @Controller('posts')

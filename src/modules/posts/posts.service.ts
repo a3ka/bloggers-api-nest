@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PostsRepository } from './posts.repository';
-import { PostType } from '../ts-types';
+import { PostType } from '../../ts-types';
 import { BloggersRepository } from '../bloggers/bloggers.repository';
 
 @Injectable()

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -6,13 +7,13 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
-  Param,
+  Param, ParseIntPipe,
   Post,
   Put,
-  Query,
-} from '@nestjs/common';
+  Query
+} from "@nestjs/common";
 import { BloggersService } from './bloggers.service';
-import { BloggersType } from '../ts-types';
+import { CreateEditBloggersDto } from './dto/bloggers.dto';
 
 @Controller('bloggers')
 export class BloggersController {
@@ -36,7 +37,7 @@ export class BloggersController {
   }
 
   @Post()
-  async createBlogger(@Body() { id, name, youtubeUrl }: BloggersType) {
+  async createBlogger(@Body() { id, name, youtubeUrl }: CreateEditBloggersDto) {
     const newBlogger = await this.bloggersService.createBlogger(
       name,
       youtubeUrl,
@@ -46,13 +47,17 @@ export class BloggersController {
 
   @HttpCode(200)
   @Get('/:bloggerId')
+  // async getBloggerById(@Param('bloggerId', ParseIntPipe) bloggerId: number) {
   async getBloggerById(@Param('bloggerId') bloggerId: string) {
     const blogger = await this.bloggersService.getBloggerById(bloggerId);
 
     if (blogger) {
       return blogger;
     } else {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      throw new BadRequestException([
+        { message: 'Blogger with that Id not found', field: 'bloggerId' },
+      ]);
     }
   }
 
@@ -60,7 +65,7 @@ export class BloggersController {
   @Put('/:bloggerId')
   async updateBlogger(
     @Param('bloggerId') bloggerId: string,
-    @Body() { name, youtubeUrl }: BloggersType,
+    @Body() { name, youtubeUrl }: CreateEditBloggersDto,
   ) {
     const isUpdated = await this.bloggersService.updateBlogger(
       bloggerId,
@@ -72,7 +77,9 @@ export class BloggersController {
       const blogger = await this.bloggersService.getBloggerById(bloggerId);
       return blogger;
     } else {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      throw new BadRequestException([
+        { message: 'Blogger with that Id not found', field: 'bloggerId' },
+      ]);
     }
   }
 
@@ -83,7 +90,9 @@ export class BloggersController {
     if (isDeleted) {
       return true;
     } else {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      throw new BadRequestException([
+        { message: 'Blogger with that Id not found', field: 'bloggerId' },
+      ]);
     }
   }
 }

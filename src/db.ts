@@ -12,7 +12,7 @@ import {
 import { PostType } from './ts-types';
 import { AttemptType } from './ts-types';
 
-dotenv.config();
+// dotenv.config();
 
 // const mongoUri = process.env.MongoURI || "mongodb+srv://alexk:123qweasd@cluster0.lapbhyv.mongodb.net/?retryWrites=true&w=majority"
 
