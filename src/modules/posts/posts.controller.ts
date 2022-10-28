@@ -16,6 +16,7 @@ import {
 import { PostsService } from './posts.service';
 import { jwtService } from '../../jwt-service';
 import { BloggersService } from '../bloggers/bloggers.service';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -53,7 +54,9 @@ export class PostsController {
   }
 
   @Post()
-  async createPost(@Body() { title, shortDescription, content, bloggerId }) {
+  async createPost(
+    @Body() { title, shortDescription, content, bloggerId }: CreatePostDto,
+  ) {
     const newPost = await this.postsService.createPost(
       title,
       shortDescription,
@@ -93,7 +96,10 @@ export class PostsController {
         return post;
       } else {
         //404
-        throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+        // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+        throw new BadRequestException([
+          { message: 'Post with that Id was not found', field: 'postId' },
+        ]);
       }
     }
 
@@ -114,7 +120,7 @@ export class PostsController {
   @Put('/:postId')
   async updateBlogger(
     @Param('postId') postId: string,
-    @Body() { title, shortDescription, content, bloggerId },
+    @Body() { title, shortDescription, content, bloggerId }: CreatePostDto,
   ) {
     const blogger = await this.bloggersService.getBloggerById(bloggerId);
 
@@ -140,7 +146,9 @@ export class PostsController {
       return blogPost;
     } else {
       //404
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      throw new BadRequestException([
+        { message: 'Post with that Id was not found', field: 'postId' },
+      ]);
     }
   }
 
@@ -153,7 +161,9 @@ export class PostsController {
       return true;
     } else {
       //404
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      throw new BadRequestException([
+        { message: 'Post with that Id was not found', field: 'postId' },
+      ]);
     }
   }
 }

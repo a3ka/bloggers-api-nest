@@ -7,11 +7,12 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
-  Param, ParseIntPipe,
+  Param,
+  ParseIntPipe,
   Post,
   Put,
-  Query
-} from "@nestjs/common";
+  Query,
+} from '@nestjs/common';
 import { BloggersService } from './bloggers.service';
 import { CreateEditBloggersDto } from './dto/bloggers.dto';
 
@@ -37,7 +38,7 @@ export class BloggersController {
   }
 
   @Post()
-  async createBlogger(@Body() { id, name, youtubeUrl }: CreateEditBloggersDto) {
+  async createBlogger(@Body() { name, youtubeUrl }: CreateEditBloggersDto) {
     const newBlogger = await this.bloggersService.createBlogger(
       name,
       youtubeUrl,
