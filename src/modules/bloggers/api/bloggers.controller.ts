@@ -5,16 +5,13 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
-  HttpStatus,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Query,
 } from '@nestjs/common';
-import { BloggersService } from './bloggers.service';
-import { CreateEditBloggersDto } from './dto/bloggers.dto';
+import { BloggersService } from '../application BLL/bloggers.service';
+import { CreateEditBloggersDto } from '../application BLL/dto/bloggers.dto';
 
 @Controller('bloggers')
 export class BloggersController {

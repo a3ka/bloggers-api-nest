@@ -15,8 +15,8 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { jwtService } from '../../jwt-service';
-import { BloggersService } from '../bloggers/bloggers.service';
-import { CreatePostDto } from './dto/create-post.dto';
+import { BloggersService } from '../bloggers/application BLL/bloggers.service';
+import { CreatePostDTO } from './dto/posts.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -55,7 +55,7 @@ export class PostsController {
 
   @Post()
   async createPost(
-    @Body() { title, shortDescription, content, bloggerId }: CreatePostDto,
+    @Body() { title, shortDescription, content, bloggerId }: CreatePostDTO,
   ) {
     const newPost = await this.postsService.createPost(
       title,
@@ -120,7 +120,7 @@ export class PostsController {
   @Put('/:postId')
   async updateBlogger(
     @Param('postId') postId: string,
-    @Body() { title, shortDescription, content, bloggerId }: CreatePostDto,
+    @Body() { title, shortDescription, content, bloggerId }: CreatePostDTO,
   ) {
     const blogger = await this.bloggersService.getBloggerById(bloggerId);
 

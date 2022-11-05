@@ -1,7 +1,8 @@
-import { UsersExtendedType, UsersType } from '../../types/types';
+import { UsersExtendedType, UsersType } from '../../../types/types';
 import { Injectable } from '@nestjs/common';
-import { BloggersRepository } from './bloggers.repository';
-import { BloggersType } from '../../ts-types';
+// import { BloggersRepository } from '../infrastructure DAL/bloggers.repository';
+import { BloggersRepository } from '../infrastructure DAL/bloggers-mongoose.repository';
+import { BloggersType } from '../../../ts-types';
 
 @Injectable()
 export class BloggersService {

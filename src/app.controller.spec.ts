@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BloggersController } from './modules/bloggers/bloggers.controller';
-import { BloggersService } from './modules/bloggers/bloggers.service';
-import { BloggersRepository } from './modules/bloggers/bloggers.repository';
+import { BloggersController } from './modules/bloggers/api/bloggers.controller';
+import { BloggersService } from './modules/bloggers/application BLL/bloggers.service';
+import { BloggersRepository } from './modules/bloggers/infrastructure DAL/bloggers.repository';
 
 describe('AppController', () => {
   let appController: AppController;
