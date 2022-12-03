@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PostsRepository } from './posts.repository';
+import { PostsRepository } from './posts-mongoose.repository';
 import { PostType } from '../../ts-types';
-import { BloggersRepository } from '../bloggers/infrastructure DAL/bloggers.repository';
+import { BloggersRepository } from '../bloggers/infrastructure DAL/bloggers-mongoose.repository';
 
 @Injectable()
 export class PostsService {

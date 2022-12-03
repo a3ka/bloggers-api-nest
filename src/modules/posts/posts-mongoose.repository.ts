@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { LikesStatusType, PostsOfBloggerType, PostType } from '../../ts-types';
 import { likesStatusCollection, PostsModel } from '../../db';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Post, PostsDocument } from './domain/posts.schema';
 
 @Injectable()
 export class PostsRepository {
+  constructor(
+    @InjectModel(Post.name) private PostModel: Model<PostsDocument>,
+  ) {}
   async getAllPosts(
     pageNumber: number,
     pageSize: number,
