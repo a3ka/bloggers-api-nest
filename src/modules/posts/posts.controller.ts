@@ -122,7 +122,7 @@ export class PostsController {
     @Param('postId') postId: string,
     @Body() { title, shortDescription, content, bloggerId }: CreatePostDTO,
   ) {
-    const blogger = await this.bloggersService.getBloggerById(bloggerId);
+    const blogger = await this.bloggersService.getBlogById(bloggerId);
 
     if (!blogger) {
       //400

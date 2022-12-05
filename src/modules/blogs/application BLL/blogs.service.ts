@@ -40,24 +40,26 @@ export class BlogsService {
     return createdBlog;
   }
 
-  async getBloggerById(bloggerId: string): Promise<BloggersType | null> {
-    const blogger = await this.blogsRepository.getBloggerById(bloggerId);
-    return blogger;
+  async getBlogById(blogId: string): Promise<BlogType | null> {
+    const blog = await this.blogsRepository.getBlogById(blogId);
+    return blog;
   }
 
-  async updateBlogger(
-    bloggerId: string,
+  async updateBlog(
+    blogId: string,
     name: string,
-    youtubeUrl: string,
+    description: string,
+    websiteUrl: string,
   ): Promise<boolean> {
-    return await this.blogsRepository.updateBlogger(
-      bloggerId,
+    return await this.blogsRepository.updateBlog(
+      blogId,
       name,
-      youtubeUrl,
+      description,
+      websiteUrl,
     );
   }
 
-  async deleteBlogger(bloggerId: string): Promise<boolean> {
-    return this.blogsRepository.deleteBlogger(bloggerId);
+  async deleteBlog(blogId: string): Promise<boolean> {
+    return this.blogsRepository.deleteBlog(blogId);
   }
 }

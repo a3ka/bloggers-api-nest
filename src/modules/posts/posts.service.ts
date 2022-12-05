@@ -68,7 +68,7 @@ export class PostsService {
     content: string,
     bloggerId: string,
   ): Promise<PostType | undefined> {
-    const blogger = await this.bloggersRepository.getBloggerById(bloggerId);
+    const blogger = await this.bloggersRepository.getBlogById(bloggerId);
     if (blogger) {
       const newPost = {
         id: (+new Date()).toString(),

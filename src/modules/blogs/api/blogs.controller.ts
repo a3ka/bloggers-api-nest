@@ -51,52 +51,52 @@ export class BlogsController {
   }
 
   @HttpCode(200)
-  @Get('/:bloggerId')
-  // async getBloggerById(@Param('bloggerId', ParseIntPipe) bloggerId: number) {
-  async getBloggerById(@Param('bloggerId') bloggerId: string) {
-    const blogger = await this.blogsService.getBloggerById(bloggerId);
+  @Get('/:id')
+  async getBlogById(@Param('id') blogId: string) {
+    const blog = await this.blogsService.getBlogById(blogId);
 
-    if (blogger) {
-      return blogger;
+    if (blog) {
+      return blog;
     } else {
       // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
       throw new BadRequestException([
-        { message: 'Blogger with that Id not found', field: 'bloggerId' },
+        { message: 'Blog with that Id not found', field: 'blogId' },
       ]);
     }
   }
 
   @HttpCode(204)
-  @Put('/:bloggerId')
+  @Put('/:id')
   async updateBlogger(
-    @Param('bloggerId') bloggerId: string,
-    @Body() { name, websiteUrl }: CreateEditBlogDto,
+    @Param('id') blogId: string,
+    @Body() { name, description, websiteUrl }: CreateEditBlogDto,
   ) {
-    const isUpdated = await this.blogsService.updateBlogger(
-      bloggerId,
+    const isUpdated = await this.blogsService.updateBlog(
+      blogId,
       name,
+      description,
       websiteUrl,
     );
 
     if (isUpdated) {
-      const blogger = await this.blogsService.getBloggerById(bloggerId);
-      return blogger;
+      const blog = await this.blogsService.getBlogById(blogId);
+      return blog;
     } else {
       throw new BadRequestException([
-        { message: 'Blogger with that Id not found', field: 'bloggerId' },
+        { message: 'Blog with that Id not found', field: 'blogId' },
       ]);
     }
   }
 
   @HttpCode(204)
-  @Delete(':bloggerId')
-  async deleteUser(@Param('bloggerId') bloggerId: string) {
-    const isDeleted = await this.blogsService.deleteBlogger(bloggerId);
+  @Delete(':id')
+  async deleteUser(@Param('id') blogId: string) {
+    const isDeleted = await this.blogsService.deleteBlog(blogId);
     if (isDeleted) {
       return true;
     } else {
       throw new BadRequestException([
-        { message: 'Blogger with that Id not found', field: 'bloggerId' },
+        { message: 'Blog with that Id not found', field: 'blogId' },
       ]);
     }
   }

@@ -83,28 +83,29 @@ export class BlogsRepository {
     return blog;
   }
 
-  async getBloggerById(bloggerId: string): Promise<BloggersType | null> {
-    const blogger: BloggersType | null = await this.BlogModel.findOne(
-      { id: bloggerId },
+  async getBlogById(blogId: string): Promise<BlogType | null> {
+    const blog: BlogType | null = await this.BlogModel.findOne(
+      { id: blogId },
       { p_id: 0, __v: 0 },
     );
-    return blogger;
+    return blog;
   }
 
-  async updateBlogger(
-    bloggerId: string,
+  async updateBlog(
+    blogId: string,
     name: string,
-    youtubeUrl: string,
+    description: string,
+    websiteUrl: string,
   ): Promise<boolean> {
     const result = await this.BlogModel.updateOne(
-      { id: bloggerId },
-      { $set: { name: name, youtubeUrl: youtubeUrl } },
+      { id: blogId },
+      { $set: { name: name, websiteUrl } },
     );
     return result.matchedCount === 1;
   }
 
-  async deleteBlogger(bloggerId: string): Promise<boolean> {
-    const result = await this.BlogModel.deleteOne({ id: bloggerId });
+  async deleteBlog(blogId: string): Promise<boolean> {
+    const result = await this.BlogModel.deleteOne({ id: blogId });
     return result.deletedCount === 1;
   }
 
