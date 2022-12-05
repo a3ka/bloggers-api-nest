@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PostsRepository } from './posts-mongoose.repository';
 import { PostType } from '../../ts-types';
-import { BloggersRepository } from '../bloggers/infrastructure DAL/bloggers-mongoose.repository';
+import { BlogsRepository } from '../blogs/infrastructure DAL/blogs.repository';
 
 @Injectable()
 export class PostsService {
   constructor(
     protected postsRepository: PostsRepository,
-    protected bloggersRepository: BloggersRepository,
+    protected bloggersRepository: BlogsRepository,
   ) {}
 
   async getAllPosts(
@@ -25,7 +25,10 @@ export class PostsService {
         for (const item of posts.items) {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          item.extendedLikesInfo.newestLikes = item.extendedLikesInfo.newestLikes.splice(0, 3);
+          item.extendedLikesInfo.newestLikes =
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            item.extendedLikesInfo.newestLikes.splice(0, 3);
         }
         return posts;
       } else {
@@ -74,7 +77,7 @@ export class PostsService {
         content,
         bloggerId,
         bloggerName: blogger.name,
-        addedAt: new Date,
+        addedAt: new Date(),
         extendedLikesInfo: {
           likesCount: 0,
           dislikesCount: 0,
@@ -96,7 +99,10 @@ export class PostsService {
       if (post) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        post.extendedLikesInfo.newestLikes = post.extendedLikesInfo.newestLikes.splice(0, 3);
+        post.extendedLikesInfo.newestLikes =
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          post.extendedLikesInfo.newestLikes.splice(0, 3);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         post!.extendedLikesInfo.myStatus = 'None';

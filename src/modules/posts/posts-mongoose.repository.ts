@@ -90,4 +90,9 @@ export class PostsRepository {
     const result = await PostsModel.deleteOne({ id: postId });
     return result.deletedCount === 1;
   }
+
+  async deleteAllPosts(): Promise<boolean> {
+    const result = await PostsModel.deleteMany({});
+    return true;
+  }
 }

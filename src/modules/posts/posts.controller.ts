@@ -15,14 +15,14 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { jwtService } from '../../jwt-service';
-import { BloggersService } from '../bloggers/application BLL/bloggers.service';
+import { BlogsService } from '../blogs/application BLL/blogs.service';
 import { CreatePostDTO } from './dto/posts.dto';
 
 @Controller('posts')
 export class PostsController {
   constructor(
     protected postsService: PostsService,
-    protected bloggersService: BloggersService,
+    protected bloggersService: BlogsService,
   ) {}
 
   @Get()

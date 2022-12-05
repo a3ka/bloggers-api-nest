@@ -1,19 +1,17 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BloggersController } from './modules/bloggers/api/bloggers.controller';
-import { BloggersService } from './modules/bloggers/application BLL/bloggers.service';
-// import { BloggersRepository } from './modules/bloggers/infrastructure DAL/bloggers.repository';
-import { BloggersRepository } from './modules/bloggers/infrastructure DAL/bloggers-mongoose.repository';
+import { BlogsController } from './modules/blogs/api/blogs.controller';
+import { BlogsService } from './modules/blogs/application BLL/blogs.service';
+// import { BloggersRepository } from './modules/blogs/infrastructure DAL/blogs.repository';
+import { BlogsRepository } from './modules/blogs/infrastructure DAL/blogs.repository';
 import { PostsService } from './modules/posts/posts.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import {
-  Blogger,
-  BloggerSchema,
-} from './modules/bloggers/domain/blogger.schema';
+import { Blog, BlogSchema } from './modules/blogs/domain/blog.schema';
 import { PostsController } from './modules/posts/posts.controller';
 import { Post, PostsSchema } from './modules/posts/domain/posts.schema';
 import { PostsRepository } from './modules/posts/posts-mongoose.repository';
+import { TestingController } from './modules/testing/testing.controller';
 
 @Module({
   imports: [
@@ -21,15 +19,20 @@ import { PostsRepository } from './modules/posts/posts-mongoose.repository';
       'mongodb+srv://alexk:123qweasd@cluster0.lapbhyv.mongodb.net/socialNetwork',
     ),
     MongooseModule.forFeature([
-      { name: Blogger.name, schema: BloggerSchema },
+      { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostsSchema },
     ]),
   ],
-  controllers: [AppController, BloggersController, PostsController],
+  controllers: [
+    AppController,
+    BlogsController,
+    PostsController,
+    TestingController,
+  ],
   providers: [
     AppService,
-    BloggersService,
-    BloggersRepository,
+    BlogsService,
+    BlogsRepository,
     PostsService,
     PostsRepository,
   ],

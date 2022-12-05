@@ -86,8 +86,8 @@ const commentsSchema = new mongoose.Schema<CommentType>(
   { _id: false },
 );
 
-// export const bloggersCollection = db.collection<BloggersType>("bloggers")
-export const BloggersModel = mongoose.model('bloggers', bloggersSchema);
+// export const bloggersCollection = db.collection<BloggersType>("blogs")
+export const BloggersModel = mongoose.model('blogs', bloggersSchema);
 
 // export const postCollection = db.collection<PostType>("posts")
 export const PostsModel = mongoose.model('posts', postsSchema);

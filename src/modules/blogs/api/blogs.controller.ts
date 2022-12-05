@@ -10,44 +10,51 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { BloggersService } from '../application BLL/bloggers.service';
-import { CreateEditBloggersDto } from '../application BLL/dto/bloggers.dto';
+import { BlogsService } from '../application BLL/blogs.service';
+import { CreateEditBlogDto } from '../application BLL/dto/blog-create-edit.dto';
 
-@Controller('bloggers')
-export class BloggersController {
-  constructor(protected bloggersService: BloggersService) {}
+@Controller('blogs')
+export class BlogsController {
+  constructor(protected blogsService: BlogsService) {}
 
   @Get()
-  async getAllBloggers(
+  async getAllBlogs(
     @Query()
     query: {
+      SearchNameTerm: string;
       PageNumber: string;
       PageSize: string;
-      SearchNameTerm: string;
+      SortBy: string;
+      SortDirection: string;
     },
   ) {
-    const bloggers = await this.bloggersService.getAllBloggers(
+    const blogs = await this.blogsService.getAllBlogs(
+      query.SearchNameTerm,
       query.PageNumber,
       query.PageSize,
-      query.SearchNameTerm,
+      query.SortBy,
+      query.SortDirection,
     );
-    return bloggers;
+    return blogs;
   }
 
   @Post()
-  async createBlogger(@Body() { name, youtubeUrl }: CreateEditBloggersDto) {
-    const newBlogger = await this.bloggersService.createBlogger(
+  async createBlog(
+    @Body() { name, description, websiteUrl }: CreateEditBlogDto,
+  ) {
+    const newBlog = await this.blogsService.createBlog(
       name,
-      youtubeUrl,
+      description,
+      websiteUrl,
     );
-    return newBlogger;
+    return newBlog;
   }
 
   @HttpCode(200)
   @Get('/:bloggerId')
   // async getBloggerById(@Param('bloggerId', ParseIntPipe) bloggerId: number) {
   async getBloggerById(@Param('bloggerId') bloggerId: string) {
-    const blogger = await this.bloggersService.getBloggerById(bloggerId);
+    const blogger = await this.blogsService.getBloggerById(bloggerId);
 
     if (blogger) {
       return blogger;
@@ -63,16 +70,16 @@ export class BloggersController {
   @Put('/:bloggerId')
   async updateBlogger(
     @Param('bloggerId') bloggerId: string,
-    @Body() { name, youtubeUrl }: CreateEditBloggersDto,
+    @Body() { name, websiteUrl }: CreateEditBlogDto,
   ) {
-    const isUpdated = await this.bloggersService.updateBlogger(
+    const isUpdated = await this.blogsService.updateBlogger(
       bloggerId,
       name,
-      youtubeUrl,
+      websiteUrl,
     );
 
     if (isUpdated) {
-      const blogger = await this.bloggersService.getBloggerById(bloggerId);
+      const blogger = await this.blogsService.getBloggerById(bloggerId);
       return blogger;
     } else {
       throw new BadRequestException([
@@ -84,7 +91,7 @@ export class BloggersController {
   @HttpCode(204)
   @Delete(':bloggerId')
   async deleteUser(@Param('bloggerId') bloggerId: string) {
-    const isDeleted = await this.bloggersService.deleteBlogger(bloggerId);
+    const isDeleted = await this.blogsService.deleteBlogger(bloggerId);
     if (isDeleted) {
       return true;
     } else {

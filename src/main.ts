@@ -29,7 +29,8 @@ async function bootstrap() {
       },
     }),
   );
+  // app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
-  await app.listen(5000);
+  await app.listen(8005);
 }
 bootstrap();
