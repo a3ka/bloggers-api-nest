@@ -11,7 +11,7 @@ export class CreatePostDTO {
   @IsString()
   content: string;
   @IsString()
-  bloggerId: string;
+  blogId: string;
 }
 
 export class UpdatePostDTO {

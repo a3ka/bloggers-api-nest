@@ -13,10 +13,10 @@ import {
   Headers,
   BadRequestException,
 } from '@nestjs/common';
-import { PostsService } from './posts.service';
-import { jwtService } from '../../jwt-service';
-import { BlogsService } from '../blogs/application BLL/blogs.service';
-import { CreatePostDTO } from './dto/posts.dto';
+import { PostsService } from '../application (BLL)/posts.service';
+import { jwtService } from '../../../jwt-service';
+import { BlogsService } from '../../blogs/application BLL/blogs.service';
+import { CreatePostDTO } from '../application (BLL)/dto/posts.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -31,6 +31,8 @@ export class PostsController {
     query: {
       PageNumber: string;
       PageSize: string;
+      SortBy;
+      SortDirection;
     },
   ) {
     // if (req.user) {
@@ -49,25 +51,39 @@ export class PostsController {
     const posts = await this.postsService.getAllPosts(
       query.PageNumber,
       query.PageSize,
+      query.SortBy,
+      query.SortDirection,
     );
     return posts;
   }
 
   @Post()
   async createPost(
-    @Body() { title, shortDescription, content, bloggerId }: CreatePostDTO,
+    @Body()
+    { title, shortDescription, content, blogId }: CreatePostDTO,
   ) {
+    const blog = await this.bloggersService.getBlogById(blogId);
+    if (!blog) {
+      //400
+      throw new BadRequestException({
+        errorsMessages: [
+          { message: 'Problem with a blogId field', field: 'blogId' },
+        ],
+      });
+    }
+
     const newPost = await this.postsService.createPost(
       title,
       shortDescription,
       content,
-      bloggerId,
+      blogId,
+      blog.name,
     );
 
     if (!newPost) {
       throw new BadRequestException({
         errorsMessages: [
-          { message: 'Problem with a bloggerId field', field: 'bloggerId' },
+          { message: 'Problem with a blogId field', field: 'blogId' },
         ],
       });
     }
@@ -120,28 +136,28 @@ export class PostsController {
   @Put('/:postId')
   async updateBlogger(
     @Param('postId') postId: string,
-    @Body() { title, shortDescription, content, bloggerId }: CreatePostDTO,
+    @Body() { title, shortDescription, content, blogId }: CreatePostDTO,
   ) {
-    const blogger = await this.bloggersService.getBlogById(bloggerId);
+    const blog = await this.bloggersService.getBlogById(blogId);
 
-    if (!blogger) {
+    if (!blog) {
       //400
       throw new BadRequestException({
         errorsMessages: [
-          { message: 'Problem with a bloggerId field', field: 'bloggerId' },
+          { message: 'Problem with a blogId field', field: 'blogId' },
         ],
       });
     }
 
-    const isUpdated = await this.postsService.updatePost(
+    const updatedPost = await this.postsService.updatePost(
       postId,
       title,
       shortDescription,
       content,
-      bloggerId,
+      blogId,
     );
 
-    if (isUpdated) {
+    if (updatedPost) {
       const blogPost = await this.postsService.getPostById(postId);
       return blogPost;
     } else {
@@ -155,9 +171,9 @@ export class PostsController {
   @HttpCode(204)
   @Delete(':postId')
   async deletePost(@Param('postId') postId: string) {
-    const isDeleted = await this.postsService.deletePost(postId);
+    const deletedPost = await this.postsService.deletePost(postId);
 
-    if (isDeleted) {
+    if (deletedPost) {
       return true;
     } else {
       //404

@@ -1,6 +1,6 @@
 import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { BlogsRepository } from '../blogs/infrastructure DAL/blogs.repository';
-import { PostsRepository } from '../posts/posts-mongoose.repository';
+import { PostsRepository } from '../posts/infrastructure (DAL)/posts.repository';
 
 @Controller('testing')
 export class TestingController {

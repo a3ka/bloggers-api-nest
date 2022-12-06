@@ -139,3 +139,21 @@ export type BlogsExtendedType = {
   totalCount: number;
   items: [BlogType | BlogType[]];
 };
+
+export type PostType = {
+  id?: string;
+  title: string;
+  shortDescription: string;
+  content: string;
+  blogId: string;
+  blogName: string;
+  createdAt?: Date;
+};
+
+export type PostsExtendedType = {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: [PostType | PostType[]];
+};
