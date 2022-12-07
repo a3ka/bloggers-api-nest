@@ -11,7 +11,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { BlogsService } from '../application BLL/blogs.service';
-import { CreateEditBlogDto } from '../application BLL/dto/blog-create-edit.dto';
+import { CreateEditBlogDto } from './dto/blog-create-edit.dto';
+import { CreateEditPostForBlogDto } from './dto/post-for-blog-create-edit.dto';
 
 @Controller('blogs')
 export class BlogsController {
@@ -99,5 +100,71 @@ export class BlogsController {
         { message: 'Blog with that Id not found', field: 'blogId' },
       ]);
     }
+  }
+
+  @HttpCode(200)
+  @Get('/:id/posts')
+  async getPostsOfBlogByItsId(
+    @Param('id') blogId: string,
+    @Query()
+    query: {
+      PageNumber: string;
+      PageSize: string;
+      SortBy: string;
+      SortDirection: string;
+    },
+  ) {
+    const blog = await this.blogsService.getBlogById(blogId);
+    if (!blog) {
+      {
+        throw new BadRequestException([
+          { message: 'Blog with that Id not found', field: 'blogId' },
+        ]);
+      }
+    }
+
+    const posts = await this.blogsService.getPostsOfBlogByItsId(
+      query.PageNumber,
+      query.PageSize,
+      query.SortBy,
+      query.SortDirection,
+      blogId,
+    );
+
+    return posts;
+
+    // if(!req.user) {
+    //   // @ts-ignore
+    //   const posts = await bloggersService.getPostsByBloggerId(req.params.bloggerId, req.query.PageNumber, req.query.PageSize);
+    //   res.status(200).send(posts);
+    // }
+    //
+    // if(req.user) {
+    //   // @ts-ignore
+    //   const posts = await bloggersService.getPostsByBloggerId(req.params.bloggerId, req.query.PageNumber, req.query.PageSize, req.user);
+    //   res.status(200).send(posts);
+    // }
+  }
+
+  @Post('/:id/posts')
+  async createPostForBlogByItsId(
+    @Body() { title, shortDescription, content }: CreateEditPostForBlogDto,
+    @Param('id') blogId: string,
+  ) {
+    const blog = await this.blogsService.getBlogById(blogId);
+
+    if (!blog) {
+      throw new BadRequestException([
+        { message: 'Blog with that Id not found', field: 'blogId' },
+      ]);
+    }
+    const newPost = await this.blogsService.createPostForBlogByItsId(
+      title,
+      shortDescription,
+      content,
+      blog,
+    );
+
+    return newPost;
   }
 }

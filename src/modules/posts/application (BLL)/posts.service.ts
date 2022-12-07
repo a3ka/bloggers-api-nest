@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PostsRepository } from '../infrastructure (DAL)/posts.repository';
-import { PostType } from '../../../ts-types';
 import { BlogsRepository } from '../../blogs/infrastructure DAL/blogs.repository';
-import { BlogsExtendedType, PostsExtendedType } from '../../../types/types';
+import {
+  BlogsExtendedType,
+  PostType,
+  PostsExtendedType,
+} from '../../../types/types';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class PostsService {
@@ -77,13 +81,13 @@ export class PostsService {
     blogName: string,
   ): Promise<PostType | undefined> {
     const newPost = {
-      id: (+new Date()).toString(),
+      id: uuidv4(),
       title,
       shortDescription,
       content,
       blogId,
       blogName,
-      createdAt: new Date(),
+      createdAt: (+new Date()).toString(),
       // extendedLikesInfo: {
       //   likesCount: 0,
       //   dislikesCount: 0,

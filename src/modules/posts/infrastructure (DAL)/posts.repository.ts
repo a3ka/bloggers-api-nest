@@ -1,14 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import {
-  LikesStatusType,
-  PostsOfBloggerType,
-  PostType,
-} from '../../../ts-types';
 import { likesStatusCollection, PostsModel } from '../../../db';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Post, PostsDocument } from '../domain/posts.schema';
-import { PostsExtendedType } from '../../../types/types';
+import { PostsExtendedType, PostType } from '../../../types/types';
 
 @Injectable()
 export class PostsRepository {
@@ -21,6 +16,7 @@ export class PostsRepository {
     sortBy: string,
     sortDirection: string,
     userId?: string,
+    blogId?: string,
   ): Promise<PostsExtendedType | undefined | null> {
     // const postsCount = await PostsModel.count({});
     // const pagesCount = Math.ceil(postsCount / pageSize);
@@ -62,11 +58,21 @@ export class PostsRepository {
       sortDirect = -1;
     }
 
-    const posts = await this.PostModel.find({}, { _id: 0, __v: 0 })
-      .sort({ sortBy: sortDirect })
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
-      .lean();
+    let posts;
+
+    if (blogId) {
+      posts = await this.PostModel.find({ blogId }, { _id: 0, __v: 0 })
+        .sort({ sortBy: sortDirect })
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .lean();
+    } else {
+      posts = await this.PostModel.find({}, { _id: 0, __v: 0 })
+        .sort({ sortBy: sortDirect })
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .lean();
+    }
 
     const postsCount = await this.PostModel.count({});
     const pagesCount = Math.ceil(postsCount / pageSize);

@@ -1,4 +1,4 @@
-import { IsString, IsUrl, Length } from 'class-validator';
+import { IsDate, IsString, IsUrl, Length } from 'class-validator';
 
 export class CreateEditBlogDto {
   @Length(1, 15)
@@ -11,4 +11,6 @@ export class CreateEditBlogDto {
   @IsUrl()
   @IsString()
   websiteUrl: string;
+  // @IsDate()
+  // createdAt: Date;
 }
