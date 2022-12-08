@@ -1,4 +1,9 @@
-import {BlogsExtendedType, BlogType, PostsExtendedType, PostType} from '../../../types/types';
+import {
+  BlogsExtendedType,
+  BlogType,
+  PostsExtendedType,
+  PostType,
+} from '../../../types/types';
 import { Injectable } from '@nestjs/common';
 import { BlogsRepository } from '../infrastructure DAL/blogs.repository';
 import { v4 as uuidv4 } from 'uuid';
@@ -107,7 +112,6 @@ export class BlogsService {
       sortDirection,
       blogId,
     );
-
     return posts;
   }
 }

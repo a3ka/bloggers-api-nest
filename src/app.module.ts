@@ -7,9 +7,15 @@ import { BlogsService } from './modules/blogs/application BLL/blogs.service';
 import { BlogsRepository } from './modules/blogs/infrastructure DAL/blogs.repository';
 import { PostsService } from './modules/posts/application (BLL)/posts.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Blog, BlogSchema } from './modules/blogs/domain/blog.schema';
+import {
+  Blog,
+  BlogSchema,
+} from './modules/blogs/infrastructure DAL/domain/blog.schema';
 import { PostsController } from './modules/posts/api/posts.controller';
-import { Post, PostsSchema } from './modules/posts/domain/posts.schema';
+import {
+  Post,
+  PostsSchema,
+} from './modules/posts/infrastructure (DAL)/domain/posts.schema';
 import { PostsRepository } from './modules/posts/infrastructure (DAL)/posts.repository';
 import { TestingController } from './modules/testing/testing.controller';
 

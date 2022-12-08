@@ -16,7 +16,7 @@ import {
 import { PostsService } from '../application (BLL)/posts.service';
 import { jwtService } from '../../../jwt-service';
 import { BlogsService } from '../../blogs/application BLL/blogs.service';
-import { CreatePostDTO } from '../application (BLL)/dto/posts.dto';
+import { CreatePostDTO } from './dto/posts.dto';
 
 @Controller('posts')
 export class PostsController {

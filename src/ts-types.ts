@@ -13,7 +13,6 @@ export type BloggersExtendedType = {
 };
 
 export type NewestLikesType = {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   addedAt: Object;
   userId: string;
   login: string;
@@ -44,11 +43,33 @@ export type PostsOfBloggerType = {
 };
 
 export type UsersType = {
-  id?: string;
+  id: string;
   login?: string;
   isConfirmed?: boolean;
   email?: string;
   password?: string;
+};
+
+export type UsersWithPassType = {
+  id: string;
+  login?: string;
+  password?: string;
+  isConfirmed?: boolean;
+};
+
+export type UsersWithEmailType = {
+  email: string;
+  login: string;
+  userId?: string;
+  id?: string;
+};
+
+export type UsersExtendedType = {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: [UsersType | UsersType[]];
 };
 
 export type UsersEmailConfDataType = {
@@ -70,6 +91,18 @@ export type CommentType = {
     dislikesCount: number;
     myStatus: string;
   };
+};
+
+export type CommentContentType = {
+  content: string;
+};
+
+export type CommentsExtendedType = {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: [CommentType | CommentType[]];
 };
 
 export type AttemptType = {

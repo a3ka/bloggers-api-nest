@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { likesStatusCollection, PostsModel } from '../../../db';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Post, PostsDocument } from '../domain/posts.schema';
+import { Post, PostsDocument } from './domain/posts.schema';
 import { PostsExtendedType, PostType } from '../../../types/types';
 
 @Injectable()
@@ -105,7 +105,6 @@ export class PostsRepository {
       // @ts-ignore
       const likesStatus: LikesStatusType | null =
         await likesStatusCollection.findOne({ id: postId, userId });
-
       const post = await PostsModel.findOne({ id: postId }, { _id: 0, __v: 0 });
       return [likesStatus, post];
     }

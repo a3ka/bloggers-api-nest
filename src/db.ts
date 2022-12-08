@@ -93,7 +93,7 @@ export const BloggersModel = mongoose.model('blogs', bloggersSchema);
 export const PostsModel = mongoose.model('posts', postsSchema);
 
 export const usersCollection = db.collection<UsersType>('users');
-export const UsersModel = mongoose.model('users', usersSchema);
+//export const UsersModel = mongoose.model('users', usersSchema);
 
 // export const usersEmailConfDataCollection = db.collection<UsersEmailConfDataType>("usersEmailConfData")
 export const usersEmailConfDataModel = mongoose.model(
