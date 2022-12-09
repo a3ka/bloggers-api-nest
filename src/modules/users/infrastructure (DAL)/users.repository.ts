@@ -126,21 +126,27 @@ export class UsersRepository {
     const result = await this.UsersModel.deleteOne({ id: id });
     return result.deletedCount === 1;
   }
+
+  //----------------------------------------------------------------------
+
+  async findUserByLogin(loginOrEmail: string): Promise<UsersType | boolean> {
+    const userByLogin = await this.UsersModel.findOne(
+      { login: loginOrEmail },
+      { _id: 0, email: 0, isConfirmed: 0, __v: 0 },
+    );
+
+    const userByEmail = await this.UsersModel.findOne(
+      { email: loginOrEmail },
+      { _id: 0, email: 0, isConfirmed: 0, __v: 0 },
+    );
+
+    if (userByLogin) return userByLogin;
+    if (userByEmail) return userByEmail;
+
+    return false;
+  }
 }
 
-//----------------------------------------------------------------------
-
-//
-// async findUserByLogin(login: string): Promise<UsersWithPassType | boolean> {
-//   const user = await UsersModel.findOne(
-//     { login: login },
-//     { _id: 0, email: 0, isConfirmed: 0, __v: 0 },
-//   );
-//
-//   if (user === null) return false;
-//   // @ts-ignore
-//   return user;
-// }
 //
 //
 //

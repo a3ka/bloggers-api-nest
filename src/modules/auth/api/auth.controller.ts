@@ -1,62 +1,16 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from '../application (BLL)/auth.service';
-import { CreateUserDTO } from './dto/auth.dto';
+import { LoginDTO } from './dto/auth.dto';
 
-@Controller('users')
+@Controller('auth')
 export class AuthController {
-  constructor(protected usersService: AuthService) {}
+  constructor(protected authService: AuthService) {}
 
-  @Get()
-  async getAllUsers(
-    @Query()
-    query: {
-      PageNumber: string;
-      PageSize: string;
-      SortBy;
-      SortDirection;
-      searchLoginTerm: string | null;
-      searchEmailTerm: string | null;
-    },
-  ) {
-    const users = await this.usersService.getAllUsers(
-      query.PageNumber,
-      query.PageSize,
-      query.SortBy,
-      query.SortDirection,
-      query.searchLoginTerm,
-      query.searchEmailTerm,
-    );
-    return users;
-  }
-
-  @Post()
-  async createUser(
+  @Post('/login')
+  async authLogin(
     @Body()
-    { login, password, email }: CreateUserDTO,
+    { loginOrEmail, password }: LoginDTO,
   ) {
-    return await this.usersService.createUser(login, password, email);
-  }
-
-  @Delete(':id')
-  async deleteUser(@Param('id') userId: string) {
-    const deletedUser = await this.usersService.deleteUser(userId);
-
-    if (deletedUser) {
-      return true;
-    } else {
-      //404
-      throw new BadRequestException([
-        { message: 'User with that Id was not found', field: 'userId' },
-      ]);
-    }
+    return await this.authService.authLogin(loginOrEmail, password);
   }
 }

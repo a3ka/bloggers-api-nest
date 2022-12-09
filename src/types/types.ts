@@ -42,7 +42,7 @@ export type UsersType = {
   id?: string;
   login?: string;
   email?: string;
-  createdAt: string;
+  createdAt?: string;
   isConfirmed?: boolean;
   password?: string;
 };
