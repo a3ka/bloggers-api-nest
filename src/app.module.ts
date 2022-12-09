@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BlogsController } from './modules/blogs/api/blogs.controller';
 import { BlogsService } from './modules/blogs/application BLL/blogs.service';
-// import { BloggersRepository } from './modules/blogs/infrastructure DAL/blogs.repository';
 import { BlogsRepository } from './modules/blogs/infrastructure DAL/blogs.repository';
 import { PostsService } from './modules/posts/application (BLL)/posts.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -18,6 +17,13 @@ import {
 } from './modules/posts/infrastructure (DAL)/domain/posts.schema';
 import { PostsRepository } from './modules/posts/infrastructure (DAL)/posts.repository';
 import { TestingController } from './modules/testing/testing.controller';
+import { UsersController } from './modules/users/api/users.controller';
+import { UsersService } from './modules/users/application (BLL)/users.service';
+import { UsersRepository } from './modules/users/infrastructure (DAL)/users.repository';
+import {
+  User,
+  UsersSchema,
+} from './modules/users/infrastructure (DAL)/domain/users.schema';
 
 @Module({
   imports: [
@@ -27,6 +33,7 @@ import { TestingController } from './modules/testing/testing.controller';
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostsSchema },
+      { name: User.name, schema: UsersSchema },
     ]),
   ],
   controllers: [
@@ -34,6 +41,7 @@ import { TestingController } from './modules/testing/testing.controller';
     BlogsController,
     PostsController,
     TestingController,
+    UsersController,
   ],
   providers: [
     AppService,
@@ -41,6 +49,8 @@ import { TestingController } from './modules/testing/testing.controller';
     BlogsRepository,
     PostsService,
     PostsRepository,
+    UsersService,
+    UsersRepository,
   ],
 })
 export class AppModule {}
