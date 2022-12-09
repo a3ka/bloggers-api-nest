@@ -1,25 +1,26 @@
 import { AuthRepository } from '../infrastructure (DAL)/auth.repository';
-import { UsersType } from '../../../types/types';
+import { UserDBType, UsersType } from '../../../types/types';
 import { v4 as uuidv4 } from 'uuid';
 import { UsersRepository } from 'src/modules/users/infrastructure (DAL)/users.repository';
+import { GenerateHash } from './usecases/generateHashUC';
 
 export class AuthService {
   constructor(
     protected authRepository: AuthRepository,
     protected usersRepository: UsersRepository,
+    protected generateHash: GenerateHash,
   ) {}
 
-  async authLogin(
-    loginOrEmail: string,
-    password: string,
-  ): Promise<UsersType | boolean> {
+  async authLogin(loginOrEmail: string, password: string): Promise<boolean> {
     const user = await this.usersRepository.findUserByLogin(loginOrEmail);
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if (user.password === password) {
-      return user;
+    if (!user) return false;
+    const passwordHash = await this.generateHash._generateHash(
+      password,
+      user.passwordSalt,
+    );
+    if (user.passwordHash !== passwordHash) {
+      return false;
     }
-    return false;
+    return true;
   }
 }

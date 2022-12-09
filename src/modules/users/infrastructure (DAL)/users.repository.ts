@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from './domain/users.schema';
 import {
   PostsExtendedType,
-  PostType,
+  PostType, UserDBType,
   UsersExtendedType,
   UsersType,
 } from '../../../types/types';
@@ -109,7 +109,7 @@ export class UsersRepository {
     return result;
   }
 
-  async createUser(newUser: UsersType): Promise<UsersType> {
+  async createUser(newUser: UserDBType): Promise<UserDBType> {
     await this.UsersModel.insertMany([newUser]);
     // await this.UsersModel.insertOne(newUser)
     const user = await this.UsersModel.findOne(
@@ -129,21 +129,21 @@ export class UsersRepository {
 
   //----------------------------------------------------------------------
 
-  async findUserByLogin(loginOrEmail: string): Promise<UsersType | boolean> {
-    const userByLogin = await this.UsersModel.findOne(
-      { login: loginOrEmail },
+  async findUserByLogin(loginOrEmail: string): Promise<UserDBType | false> {
+    const user = await this.UsersModel.findOne(
+      {
+        $or: [
+          {
+            login: loginOrEmail,
+          },
+          {
+            email: loginOrEmail,
+          },
+        ],
+      },
       { _id: 0, email: 0, isConfirmed: 0, __v: 0 },
     );
-
-    const userByEmail = await this.UsersModel.findOne(
-      { email: loginOrEmail },
-      { _id: 0, email: 0, isConfirmed: 0, __v: 0 },
-    );
-
-    if (userByLogin) return userByLogin;
-    if (userByEmail) return userByEmail;
-
-    return false;
+    return user;
   }
 }
 

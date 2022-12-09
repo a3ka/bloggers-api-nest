@@ -24,6 +24,10 @@ import {
   User,
   UsersSchema,
 } from './modules/users/infrastructure (DAL)/domain/users.schema';
+import { AuthController } from './modules/auth/api/auth.controller';
+import { AuthService } from './modules/auth/application (BLL)/auth.service';
+import { AuthRepository } from './modules/auth/infrastructure (DAL)/auth.repository';
+import { GenerateHash } from './modules/auth/application (BLL)/usecases/generateHashUC';
 
 @Module({
   imports: [
@@ -42,6 +46,7 @@ import {
     PostsController,
     TestingController,
     UsersController,
+    AuthController,
   ],
   providers: [
     AppService,
@@ -51,6 +56,9 @@ import {
     PostsRepository,
     UsersService,
     UsersRepository,
+    AuthService,
+    AuthRepository,
+    GenerateHash,
   ],
 })
 export class AppModule {}

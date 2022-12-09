@@ -55,6 +55,15 @@ export type UsersExtendedType = {
   items: [UsersType | UsersType[]];
 };
 
+export type UserDBType = {
+  id: string;
+  login: string;
+  email: string;
+  passwordHash: string;
+  passwordSalt: string;
+  createdAt: string;
+};
+
 // export type UsersExtendedType = {
 //   pagesCount: number;
 //   pageSize: number;

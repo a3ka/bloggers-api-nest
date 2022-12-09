@@ -1,9 +1,14 @@
 import { UsersRepository } from '../infrastructure (DAL)/users.repository';
-import { UsersExtendedType, UsersType } from '../../../types/types';
+import { UserDBType, UsersExtendedType, UsersType } from '../../../types/types';
 import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcrypt';
+import { GenerateHash } from '../../auth/application (BLL)/usecases/generateHashUC';
 
 export class UsersService {
-  constructor(protected usersRepository: UsersRepository) {}
+  constructor(
+    protected usersRepository: UsersRepository,
+    protected generateHash: GenerateHash,
+  ) {}
 
   async getAllUsers(
     pageNumber: string = '1' || undefined,
@@ -27,17 +32,29 @@ export class UsersService {
     login: string,
     password: string,
     email: string,
-  ): Promise<UsersType> {
+  ): Promise<UserDBType> {
+    const passwordSalt = await bcrypt.genSalt(10);
+    const passwordHash = await this.generateHash._generateHash(
+      password,
+      passwordSalt,
+    );
+
     const newUser = {
       id: uuidv4(),
       login,
       email,
-      password,
+      passwordHash,
+      passwordSalt,
       createdAt: (+new Date()).toString(),
       // isConfirmed: false,
     };
     return this.usersRepository.createUser(newUser);
   }
+
+  // async _generateHash(password: string, salt: string) {
+  //   const hash = bcrypt.hash(password, salt);
+  //   return hash;
+  // }
 
   async deleteUser(id: string): Promise<boolean> {
     return this.usersRepository.deleteUser(id);
