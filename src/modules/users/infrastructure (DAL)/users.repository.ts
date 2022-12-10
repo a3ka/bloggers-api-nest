@@ -4,7 +4,8 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from './domain/users.schema';
 import {
   PostsExtendedType,
-  PostType, UserDBType,
+  PostType,
+  UserDBType,
   UsersExtendedType,
   UsersType,
 } from '../../../types/types';
@@ -129,7 +130,7 @@ export class UsersRepository {
 
   //----------------------------------------------------------------------
 
-  async findUserByLogin(loginOrEmail: string): Promise<UserDBType | false> {
+  async findUserByLogin(loginOrEmail: string): Promise<UsersType | false> {
     const user = await this.UsersModel.findOne(
       {
         $or: [
@@ -141,7 +142,8 @@ export class UsersRepository {
           },
         ],
       },
-      { _id: 0, email: 0, isConfirmed: 0, __v: 0 },
+      { _id: 0, email: 0, __v: 0 },
+      // { _id: 0, email: 0, isConfirmed: 0, __v: 0 },
     );
     return user;
   }

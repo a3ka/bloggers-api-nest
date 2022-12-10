@@ -1,9 +1,3 @@
-import {
-  User,
-  UserDocument,
-} from '../modules/users/infrastructure (DAL)/domain/users.schema';
-import { HydratedDocument, LeanDocument, Query, Types } from 'mongoose';
-
 export type BlogType = {
   id?: string;
   name: string;
@@ -39,12 +33,13 @@ export type PostsExtendedType = {
 };
 
 export type UsersType = {
-  id?: string;
-  login?: string;
-  email?: string;
-  createdAt?: string;
+  id: string;
+  login: string;
+  email: string;
+  passwordHash: string;
+  passwordSalt: string;
+  createdAt: string;
   isConfirmed?: boolean;
-  password?: string;
 };
 
 export type UsersExtendedType = {
@@ -62,6 +57,7 @@ export type UserDBType = {
   passwordHash: string;
   passwordSalt: string;
   createdAt: string;
+  isConfirmed?: boolean;
 };
 
 // export type UsersExtendedType = {

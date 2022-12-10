@@ -3,7 +3,9 @@ import { UserDBType, UsersExtendedType, UsersType } from '../../../types/types';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import { GenerateHash } from '../../auth/application (BLL)/usecases/generateHashUC';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UsersService {
   constructor(
     protected usersRepository: UsersRepository,

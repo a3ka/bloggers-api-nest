@@ -14,7 +14,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PostsService } from '../application (BLL)/posts.service';
-import { jwtService } from '../../../jwt-service';
+import { jwtService } from '../../auth/api/jwt-service';
 import { BlogsService } from '../../blogs/application BLL/blogs.service';
 import { CreatePostDTO } from './dto/posts.dto';
 

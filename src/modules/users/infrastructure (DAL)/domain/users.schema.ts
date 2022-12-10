@@ -10,11 +10,15 @@ export class User {
   @Prop()
   login: string;
   @Prop()
-  password: string;
+  email: string;
+  @Prop()
+  passwordHash: string;
+  @Prop()
+  passwordSalt: string;
+  @Prop()
+  createdAt: string;
   @Prop()
   isConfirmed: boolean;
-  @Prop()
-  email: string;
 }
 
 export const UsersSchema = SchemaFactory.createForClass(User);

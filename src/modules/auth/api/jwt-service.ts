@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { UsersType } from './ts-types';
+import { UsersType } from '../../../ts-types';
 
 export const jwtService = {
   async createJWTPair(user: UsersType) {
