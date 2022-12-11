@@ -1,6 +1,4 @@
-import { AuthRepository } from '../infrastructure (DAL)/auth.repository';
-import { UserDBType, UsersType } from '../../../types/types';
-import { v4 as uuidv4 } from 'uuid';
+import { UsersType } from '../../../types/types';
 import { UsersRepository } from 'src/modules/users/infrastructure (DAL)/users.repository';
 import { GenerateHash } from './usecases/generateHashUC';
 import { Injectable } from '@nestjs/common';
