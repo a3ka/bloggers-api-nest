@@ -28,6 +28,7 @@ import { AuthController } from './modules/auth/api/auth.controller';
 import { AuthService } from './modules/auth/application (BLL)/auth.service';
 import { AuthRepository } from './modules/auth/infrastructure (DAL)/auth.repository';
 import { GenerateHash } from './modules/auth/application (BLL)/usecases/generateHashUC';
+import { Auth, AuthSchema } from './modules/auth/infrastructure (DAL)/domain/auth.schema';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { GenerateHash } from './modules/auth/application (BLL)/usecases/generate
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostsSchema },
       { name: User.name, schema: UsersSchema },
+      { name: Auth.name, schema: AuthSchema },
     ]),
   ],
   controllers: [
