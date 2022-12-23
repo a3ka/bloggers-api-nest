@@ -25,10 +25,13 @@ import {
   UsersSchema,
 } from './modules/users/infrastructure (DAL)/domain/users.schema';
 import { AuthController } from './modules/auth/api/auth.controller';
-import { AuthService } from './modules/auth/application (BLL)/auth.service';
+import { DontInUseAuthService } from './modules/auth/application (BLL)/!!!DontInUse!!!auth.service';
 import { AuthRepository } from './modules/auth/infrastructure (DAL)/auth.repository';
-import { GenerateHash } from './modules/auth/application (BLL)/usecases/generateHashUC';
-import { Auth, AuthSchema } from './modules/auth/infrastructure (DAL)/domain/auth.schema';
+import {
+  Auth,
+  AuthSchema,
+} from './modules/auth/infrastructure (DAL)/domain/auth.schema';
+import { JWTService } from './modules/auth/application (BLL)/jwt.service';
 
 @Module({
   imports: [
@@ -58,9 +61,9 @@ import { Auth, AuthSchema } from './modules/auth/infrastructure (DAL)/domain/aut
     PostsRepository,
     UsersService,
     UsersRepository,
-    AuthService,
+    DontInUseAuthService,
     AuthRepository,
-    GenerateHash,
+    JWTService,
   ],
 })
 export class AppModule {}

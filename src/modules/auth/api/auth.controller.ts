@@ -1,11 +1,11 @@
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { LoginDTO } from './dto/auth.dto';
-import { jwtService } from './jwt-service';
-import { AuthLoginUC } from '../application (BLL)/usecases/authLoginUC';
+import { JWTService } from '../application (BLL)/jwt.service';
+import { AuthLoginUC } from '../application (BLL)/authLoginUC';
 
 @Controller('auth')
 export class AuthController {
-  constructor(protected login: AuthLoginUC) {}
+  constructor(protected login: AuthLoginUC, protected jwtService: JWTService) {}
 
   @Post('/login')
   async authLogin(
@@ -16,7 +16,7 @@ export class AuthController {
     if (user) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const token = await jwtService.createJWTPair(user);
+      const token = await this.jwtService.createJWTPair(user);
       return token;
     } else {
       throw new BadRequestException([

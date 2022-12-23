@@ -1,7 +1,15 @@
 import jwt from 'jsonwebtoken';
 import { UsersType } from '../../../ts-types';
+import bcrypt from 'bcrypt';
+import { Injectable } from '@nestjs/common';
 
-export const jwtService = {
+@Injectable()
+export class JWTService {
+  async generateHash(password: string, salt: string) {
+    const hash = bcrypt.hash(password, salt);
+    return hash;
+  }
+
   async createJWTPair(user: UsersType) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -20,7 +28,7 @@ export const jwtService = {
     const jwtTokenPair = { accessToken, refreshToken };
 
     return jwtTokenPair;
-  },
+  }
 
   async getUserIdByToken(token: string) {
     try {
@@ -36,7 +44,7 @@ export const jwtService = {
     } catch (error) {
       return false;
     }
-  },
+  }
 
   async getTokenExpTime(token: string) {
     try {
@@ -59,5 +67,5 @@ export const jwtService = {
     // } else {
     //     return false
     // }
-  },
-};
+  }
+}

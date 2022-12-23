@@ -130,7 +130,9 @@ export class UsersRepository {
 
   //----------------------------------------------------------------------
 
-  async findUserByLogin(loginOrEmail: string): Promise<UsersType | false> {
+  async findUserByLoginOrEmail(
+    loginOrEmail: string,
+  ): Promise<UsersType | false> {
     const user = await this.UsersModel.findOne(
       {
         $or: [
