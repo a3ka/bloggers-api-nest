@@ -33,12 +33,12 @@ export type PostsExtendedType = {
 };
 
 export type UsersType = {
-  id: string;
-  login: string;
-  email: string;
-  passwordHash: string;
-  passwordSalt: string;
-  createdAt: string;
+  id?: string;
+  login?: string;
+  email?: string;
+  passwordHash?: string;
+  passwordSalt?: string;
+  createdAt?: string;
   isConfirmed?: boolean;
 };
 

@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class JWTService {
+export class JwtService {
   async generateHash(password: string, salt: string) {
     const hash = bcrypt.hash(password, salt);
     return hash;

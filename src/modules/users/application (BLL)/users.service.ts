@@ -3,13 +3,15 @@ import { UserDBType, UsersExtendedType, UsersType } from '../../../types/types';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
-import { JWTService } from '../../auth/application (BLL)/jwt.service';
+import { JwtService } from '../../auth/application (BLL)/!!!!jwt.service';
+import { GenerateHash } from './generate-hash';
 
 @Injectable()
 export class UsersService {
   constructor(
     protected usersRepository: UsersRepository,
-    protected jwtService: JWTService,
+    // protected jwtService: JwtService,
+    protected hashGenerator: GenerateHash,
   ) {}
 
   async getAllUsers(
@@ -36,7 +38,7 @@ export class UsersService {
     email: string,
   ): Promise<UserDBType> {
     const passwordSalt = await bcrypt.genSalt(10);
-    const passwordHash = await this.jwtService.generateHash(
+    const passwordHash = await this.hashGenerator._generateHash(
       password,
       passwordSalt,
     );

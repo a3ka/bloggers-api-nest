@@ -1,13 +1,13 @@
 import { UsersRepository } from 'src/modules/users/infrastructure (DAL)/users.repository';
 import { Injectable } from '@nestjs/common';
 import { UsersType } from '../../../types/types';
-import { JWTService } from './jwt.service';
+import { JwtService } from './!!!!jwt.service';
 
 @Injectable()
 export class AuthLoginUC {
   constructor(
     protected usersRepository: UsersRepository,
-    protected jwtService: JWTService,
+    protected jwtService: JwtService,
   ) {}
 
   async _authLogin(

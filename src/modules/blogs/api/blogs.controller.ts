@@ -9,10 +9,12 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { BlogsService } from '../application BLL/blogs.service';
 import { CreateEditBlogDto } from './dto/blog-create-edit.dto';
 import { CreateEditPostForBlogDto } from './dto/post-for-blog-create-edit.dto';
+import { BasicAuthGuard } from '../../auth/api/guards/basic-auth.guard';
 
 @Controller('blogs')
 export class BlogsController {
@@ -39,6 +41,7 @@ export class BlogsController {
     return blogs;
   }
 
+  @UseGuards(BasicAuthGuard)
   @Post()
   async createBlog(
     @Body() { name, description, websiteUrl }: CreateEditBlogDto,

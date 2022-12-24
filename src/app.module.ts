@@ -25,13 +25,17 @@ import {
   UsersSchema,
 } from './modules/users/infrastructure (DAL)/domain/users.schema';
 import { AuthController } from './modules/auth/api/auth.controller';
-import { DontInUseAuthService } from './modules/auth/application (BLL)/!!!DontInUse!!!auth.service';
-import { AuthRepository } from './modules/auth/infrastructure (DAL)/auth.repository';
 import {
   Auth,
   AuthSchema,
 } from './modules/auth/infrastructure (DAL)/domain/auth.schema';
-import { JWTService } from './modules/auth/application (BLL)/jwt.service';
+import { JwtService } from './modules/auth/application (BLL)/!!!!jwt.service';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { LocalStrategy } from './modules/auth/api/strategies/local.strategy';
+import { JwtStrategy } from './modules/auth/api/strategies/jwt.strategy';
+import { GenerateHash } from './modules/users/application (BLL)/generate-hash';
+import { BasicStrategy } from './modules/auth/api/strategies/basic.strategy';
 
 @Module({
   imports: [
@@ -44,6 +48,11 @@ import { JWTService } from './modules/auth/application (BLL)/jwt.service';
       { name: User.name, schema: UsersSchema },
       { name: Auth.name, schema: AuthSchema },
     ]),
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || '123',
+      signOptions: { expiresIn: '60s' },
+    }),
   ],
   controllers: [
     AppController,
@@ -61,9 +70,11 @@ import { JWTService } from './modules/auth/application (BLL)/jwt.service';
     PostsRepository,
     UsersService,
     UsersRepository,
-    DontInUseAuthService,
-    AuthRepository,
-    JWTService,
+    GenerateHash,
+    LocalStrategy,
+    JwtStrategy,
+    BasicStrategy,
+    JwtService,
   ],
 })
 export class AppModule {}
