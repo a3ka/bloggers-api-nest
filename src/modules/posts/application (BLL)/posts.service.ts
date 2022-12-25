@@ -20,6 +20,7 @@ export class PostsService {
     pageSize: string = '10' || undefined || null,
     sortBy = 'createdAt',
     sortDirection = 'desc',
+    blogId?: string,
     userId?: string,
   ): Promise<PostsExtendedType | undefined | null> {
     // if (!userId) {
@@ -65,11 +66,23 @@ export class PostsService {
     //   return posts;
     // }
     //-----------------------
+
+    // if (blogId) {
+    //   return this.postsRepository.getAllPosts(
+    //     +pageNumber,
+    //     +pageSize,
+    //     sortBy,
+    //     sortDirection,
+    //   );
+    // }
+
     return this.postsRepository.getAllPosts(
       +pageNumber,
       +pageSize,
       sortBy,
       sortDirection,
+      blogId,
+      userId,
     );
   }
 
@@ -87,7 +100,8 @@ export class PostsService {
       content,
       blogId,
       blogName,
-      createdAt: (+new Date()).toString(),
+      createdAt: new Date(),
+      // createdAt: (+new Date()).toString(),
       // extendedLikesInfo: {
       //   likesCount: 0,
       //   dislikesCount: 0,
@@ -101,24 +115,22 @@ export class PostsService {
     return createdPost;
   }
 
-  async getPostById(postId: string, userId?: string) {
+  async getPostById(
+    postId: string,
+    userId?: string,
+  ): Promise<PostType | undefined | null> {
     if (!userId) {
       const post = await this.postsRepository.getPostById(postId);
+      return post;
 
-      if (post) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        post.extendedLikesInfo.newestLikes =
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          post.extendedLikesInfo.newestLikes.splice(0, 3);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        post!.extendedLikesInfo.myStatus = 'None';
-        return post;
-      } else {
-        return undefined;
-      }
+      // if (post) {
+      //   post.extendedLikesInfo.newestLikes =
+      //     post.extendedLikesInfo.newestLikes.splice(0, 3);
+      //   post!.extendedLikesInfo.myStatus = 'None';
+      //   return post;
+      // } else {
+      //   return undefined;
+      // }
     } else {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -135,9 +147,9 @@ export class PostsService {
         return post;
       }
 
-      post.extendedLikesInfo.newestLikes =
-        post.extendedLikesInfo.newestLikes.splice(0, 3);
-      post!.extendedLikesInfo.myStatus = likesStatus.likeStatus;
+      // post.extendedLikesInfo.newestLikes =
+      //   post.extendedLikesInfo.newestLikes.splice(0, 3);
+      // post!.extendedLikesInfo.myStatus = likesStatus.likeStatus;
       return post;
     }
   }

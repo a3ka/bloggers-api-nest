@@ -15,13 +15,14 @@ export type BlogsExtendedType = {
 };
 
 export type PostType = {
-  id?: any;
+  id?: string;
   title: string;
   shortDescription: string;
   content: string;
   blogId: string;
   blogName: string;
-  createdAt?: string;
+  createdAt?: Date;
+  // createdAt?: string;
 };
 
 export type PostsExtendedType = {
@@ -56,7 +57,8 @@ export type UserDBType = {
   email: string;
   passwordHash: string;
   passwordSalt: string;
-  createdAt: string;
+  createdAt: Date;
+  // createdAt: string;
   isConfirmed?: boolean;
 };
 

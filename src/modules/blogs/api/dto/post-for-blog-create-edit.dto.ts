@@ -8,7 +8,6 @@ export class CreateEditPostForBlogDto {
   @IsString()
   shortDescription: string;
   @Length(1, 100)
-  @IsUrl()
   @IsString()
   content: string;
   // @IsDate()

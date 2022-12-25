@@ -15,10 +15,14 @@ import { BlogsService } from '../application BLL/blogs.service';
 import { CreateEditBlogDto } from './dto/blog-create-edit.dto';
 import { CreateEditPostForBlogDto } from './dto/post-for-blog-create-edit.dto';
 import { BasicAuthGuard } from '../../auth/api/guards/basic-auth.guard';
+import { PostsService } from '../../posts/application (BLL)/posts.service';
 
 @Controller('blogs')
 export class BlogsController {
-  constructor(protected blogsService: BlogsService) {}
+  constructor(
+    protected blogsService: BlogsService,
+    protected postsService: PostsService,
+  ) {}
 
   @Get()
   async getAllBlogs(
@@ -95,7 +99,7 @@ export class BlogsController {
   @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   @Delete(':id')
-  async deleteUser(@Param('id') blogId: string) {
+  async deleteBlog(@Param('id') blogId: string) {
     const isDeleted = await this.blogsService.deleteBlog(blogId);
     if (isDeleted) {
       return true;
@@ -118,8 +122,14 @@ export class BlogsController {
       SortDirection: string;
     },
   ) {
-    const blog = await this.blogsService.getBlogById(blogId);
-    if (!blog) {
+    const posts = await this.postsService.getAllPosts(
+      query.PageNumber,
+      query.PageSize,
+      query.SortBy,
+      query.SortDirection,
+      blogId,
+    );
+    if (!posts) {
       {
         throw new BadRequestException([
           { message: 'Blog with that Id not found', field: 'blogId' },
@@ -127,13 +137,13 @@ export class BlogsController {
       }
     }
 
-    const posts = await this.blogsService.getPostsOfBlogByItsId(
-      query.PageNumber,
-      query.PageSize,
-      query.SortBy,
-      query.SortDirection,
-      blogId,
-    );
+    // const posts = await this.blogsService.getPostsOfBlogByItsId(
+    //   query.PageNumber,
+    //   query.PageSize,
+    //   query.SortBy,
+    //   query.SortDirection,
+    //   blogId,
+    // );
 
     return posts;
 

@@ -87,8 +87,8 @@ export class BlogsService {
       content,
       blogId: blog.id,
       blogName: blog.name,
-      // createdAt: new Date(),
-      createdAt: (+new Date()).toString(),
+      createdAt: new Date(),
+      // createdAt: (+new Date()).toString(),
     };
 
     const createdPost = await this.postsRepository.createPost(newPost);

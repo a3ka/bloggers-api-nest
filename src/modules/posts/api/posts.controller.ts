@@ -15,7 +15,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from '../application (BLL)/posts.service';
-// import { jwtService } from '../../auth/application (BLL)/!!!!jwt.service';
 import { BlogsService } from '../../blogs/application BLL/blogs.service';
 import { CreatePostDTO } from './dto/posts.dto';
 import { AuthService } from '../../auth/application (BLL)/auth.service';
@@ -97,9 +96,9 @@ export class PostsController {
 
   @HttpCode(200)
   @Get('/:postId')
-  async getBloggerById(
+  async getPostById(
     @Param('postId') postId: string,
-    @Headers('authorization') authorization: string,
+    // @Headers('authorization') authorization: string,
   ) {
     if (typeof postId !== 'string') {
       throw new BadRequestException({
@@ -109,31 +108,41 @@ export class PostsController {
       });
     }
 
-    const auth = authorization;
-    if (!auth) {
-      const post = await this.postsService.getPostById(postId);
+    // const auth = authorization;
+    // if (!auth) {
+    //   const post = await this.postsService.getPostById(postId);
+    //
+    //   if (post) {
+    //     return post;
+    //   } else {
+    //     //404
+    //     // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    //     throw new BadRequestException([
+    //       { message: 'Post with that Id was not found', field: 'postId' },
+    //     ]);
+    //   }
+    // }
+    //
+    // if (auth) {
+    //   const token = auth.split(' ')[1];
+    //   const userId = await this.authService.getUserIdByToken(token);
+    //   const post = await this.postsService.getPostById(postId, userId);
+    //   if (post) {
+    //     return post;
+    //   } else {
+    //     //404
+    //     throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    //   }
+    // }
 
-      if (post) {
-        return post;
-      } else {
-        //404
-        // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-        throw new BadRequestException([
-          { message: 'Post with that Id was not found', field: 'postId' },
-        ]);
-      }
-    }
+    const post = await this.postsService.getPostById(postId);
 
-    if (auth) {
-      const token = auth.split(' ')[1];
-      const userId = await this.authService.getUserIdByToken(token);
-      const post = await this.postsService.getPostById(postId, userId);
-      if (post) {
-        return post;
-      } else {
-        //404
-        throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-      }
+    if (post) {
+      return post;
+    } else {
+      throw new BadRequestException([
+        { message: 'Post with that Id not found', field: 'postId' },
+      ]);
     }
   }
 
