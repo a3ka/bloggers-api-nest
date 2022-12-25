@@ -3,7 +3,6 @@ import { UserDBType, UsersExtendedType, UsersType } from '../../../types/types';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '../../auth/application (BLL)/!!!!jwt.service';
 import { GenerateHash } from './generate-hash';
 
 @Injectable()

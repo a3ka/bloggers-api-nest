@@ -7,14 +7,17 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from '../application (BLL)/users.service';
 import { CreateUserDTO } from './dto/user.dto';
+import { BasicAuthGuard } from '../../auth/api/guards/basic-auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(protected usersService: UsersService) {}
 
+  @UseGuards(BasicAuthGuard)
   @Get()
   async getAllUsers(
     @Query()
@@ -38,6 +41,7 @@ export class UsersController {
     return users;
   }
 
+  @UseGuards(BasicAuthGuard)
   @Post()
   async createUser(
     @Body()
@@ -46,6 +50,7 @@ export class UsersController {
     return await this.usersService.createUser(login, password, email);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   async deleteUser(@Param('id') userId: string) {
     const deletedUser = await this.usersService.deleteUser(userId);

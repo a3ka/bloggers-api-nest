@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersType } from 'src/types/types';
 import { UsersRepository } from '../../users/infrastructure (DAL)/users.repository';
 import { GenerateHash } from '../../users/application (BLL)/generate-hash';
+import jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -35,5 +36,21 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async getUserIdByToken(token: string) {
+    try {
+      const result: any = await jwt.verify(
+        token,
+        process.env.JWT_SECRET || '123',
+      );
+      if (result) {
+        return result.userId;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
   }
 }

@@ -69,6 +69,7 @@ export class BlogsController {
     }
   }
 
+  @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   @Put('/:id')
   async updateBlogger(
@@ -91,7 +92,7 @@ export class BlogsController {
       ]);
     }
   }
-
+  @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   @Delete(':id')
   async deleteUser(@Param('id') blogId: string) {
@@ -149,6 +150,7 @@ export class BlogsController {
     // }
   }
 
+  @UseGuards(BasicAuthGuard)
   @Post('/:id/posts')
   async createPostForBlogByItsId(
     @Body() { title, shortDescription, content }: CreateEditPostForBlogDto,

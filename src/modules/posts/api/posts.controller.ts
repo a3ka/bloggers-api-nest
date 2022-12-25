@@ -12,17 +12,21 @@ import {
   Query,
   Headers,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from '../application (BLL)/posts.service';
-import { jwtService } from '../../auth/application (BLL)/!!!!jwt.service';
+// import { jwtService } from '../../auth/application (BLL)/!!!!jwt.service';
 import { BlogsService } from '../../blogs/application BLL/blogs.service';
 import { CreatePostDTO } from './dto/posts.dto';
+import { AuthService } from '../../auth/application (BLL)/auth.service';
+import { BasicAuthGuard } from '../../auth/api/guards/basic-auth.guard';
 
 @Controller('posts')
 export class PostsController {
   constructor(
     protected postsService: PostsService,
     protected bloggersService: BlogsService,
+    protected authService: AuthService,
   ) {}
 
   @Get()
@@ -57,6 +61,7 @@ export class PostsController {
     return posts;
   }
 
+  @UseGuards(BasicAuthGuard)
   @Post()
   async createPost(
     @Body()
@@ -121,7 +126,7 @@ export class PostsController {
 
     if (auth) {
       const token = auth.split(' ')[1];
-      const userId = await jwtService.getUserIdByToken(token);
+      const userId = await this.authService.getUserIdByToken(token);
       const post = await this.postsService.getPostById(postId, userId);
       if (post) {
         return post;
@@ -132,6 +137,7 @@ export class PostsController {
     }
   }
 
+  @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   @Put('/:postId')
   async updateBlogger(
@@ -168,6 +174,7 @@ export class PostsController {
     }
   }
 
+  @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   @Delete(':postId')
   async deletePost(@Param('postId') postId: string) {

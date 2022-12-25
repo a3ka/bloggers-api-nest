@@ -29,13 +29,13 @@ import {
   Auth,
   AuthSchema,
 } from './modules/auth/infrastructure (DAL)/domain/auth.schema';
-import { JwtService } from './modules/auth/application (BLL)/!!!!jwt.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './modules/auth/api/strategies/local.strategy';
 import { JwtStrategy } from './modules/auth/api/strategies/jwt.strategy';
 import { GenerateHash } from './modules/users/application (BLL)/generate-hash';
 import { BasicStrategy } from './modules/auth/api/strategies/basic.strategy';
+import { AuthService } from './modules/auth/application (BLL)/auth.service';
 
 @Module({
   imports: [
@@ -70,11 +70,11 @@ import { BasicStrategy } from './modules/auth/api/strategies/basic.strategy';
     PostsRepository,
     UsersService,
     UsersRepository,
+    AuthService,
     GenerateHash,
     LocalStrategy,
     JwtStrategy,
     BasicStrategy,
-    JwtService,
   ],
 })
 export class AppModule {}
