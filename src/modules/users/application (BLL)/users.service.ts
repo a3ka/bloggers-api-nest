@@ -1,7 +1,7 @@
 import { UsersRepository } from '../infrastructure (DAL)/users.repository';
 import { UserDBType, UsersExtendedType, UsersType } from '../../../types/types';
 import { v4 as uuidv4 } from 'uuid';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
 import { GenerateHash } from './generate-hash';
 
@@ -48,7 +48,7 @@ export class UsersService {
       email,
       passwordHash,
       passwordSalt,
-      createdAt: (+new Date()).toString(),
+      createdAt: new Date().toString(),
       // isConfirmed: false,
     };
     return this.usersRepository.createUser(newUser);

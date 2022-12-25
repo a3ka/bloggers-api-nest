@@ -8,7 +8,7 @@ import { UsersRepository } from '../../users/infrastructure (DAL)/users.reposito
 export class AuthController {
   // constructor(protected login: AuthLoginUC, protected jwtService: JwtService) {}
   constructor(
-    protected userRepo: UsersRepository,
+    protected usersRepository: UsersRepository,
     protected authService: AuthService,
   ) {}
   //
@@ -36,13 +36,15 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   async login(@Request() req) {
-    return this.authService.login(req.user);
+    const result = await this.authService.login(req.user._doc);
+    return { accessToken: result.accessToken };
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/profile')
+  @Get('/me')
   async getProfile(@Request() req) {
-    const user = this.userRepo.findUserByLoginOrEmail(req.user.id);
+    // const user = this.userRepo.findUserByLoginOrEmail(req.user.id);
+    const user = this.usersRepository.findUserById(req.user.id);
     return user;
   }
 }

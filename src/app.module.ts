@@ -51,7 +51,7 @@ import { AuthService } from './modules/auth/application (BLL)/auth.service';
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || '123',
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '5m' },
     }),
   ],
   controllers: [

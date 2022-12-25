@@ -9,6 +9,7 @@ import {
   UsersExtendedType,
   UsersType,
 } from '../../../types/types';
+import { PostsModel } from '../../../db';
 
 @Injectable()
 export class UsersRepository {
@@ -62,7 +63,7 @@ export class UsersRepository {
       const users = await this.UsersModel.find(
         { searchLoginTerm: searchEmailTerm },
         // { name: { $regex: searchLoginTerm } },
-        { _id: 0, password: 0, email: 0, isConfirmed: 0, __v: 0 },
+        { _id: 0, passwordHash: 0, passwordSalt: 0, isConfirmed: 0, __v: 0 },
       )
         .sort({ sortBy: sortDirect })
         .skip((pageNumber - 1) * pageSize)
@@ -87,7 +88,7 @@ export class UsersRepository {
 
     const users = await this.UsersModel.find(
       {},
-      { _id: 0, password: 0, email: 0, isConfirmed: 0, __v: 0 },
+      { _id: 0, passwordHash: 0, passwordSalt: 0, isConfirmed: 0, __v: 0 },
     )
       .sort({ sortBy: sortDirect })
       .skip((pageNumber - 1) * pageSize)
@@ -115,7 +116,7 @@ export class UsersRepository {
     // await this.UsersModel.insertOne(newUser)
     const user = await this.UsersModel.findOne(
       { id: newUser.id },
-      { _id: 0, password: 0, email: 0, isConfirmed: 0, __v: 0 },
+      { _id: 0, passwordHash: 0, passwordSalt: 0, isConfirmed: 0, __v: 0 },
     );
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -129,6 +130,11 @@ export class UsersRepository {
   }
 
   //----------------------------------------------------------------------
+
+  async deleteAllUsers(): Promise<boolean> {
+    const result = await this.UsersModel.deleteMany({});
+    return true;
+  }
 
   async findUserByLoginOrEmail(
     loginOrEmail: string,
@@ -146,6 +152,14 @@ export class UsersRepository {
       },
       { _id: 0, email: 0, __v: 0 },
       // { _id: 0, email: 0, isConfirmed: 0, __v: 0 },
+    );
+    return user;
+  }
+
+  async findUserById(userId: string): Promise<UsersType> {
+    const user = await this.UsersModel.findOne(
+      { id: userId },
+      { _id: 0, passwordHash: 0, passwordSalt: 0, isConfirmed: 0, __v: 0 },
     );
     return user;
   }
