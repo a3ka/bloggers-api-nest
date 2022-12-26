@@ -4,63 +4,111 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
+  Put,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from '../application (BLL)/users.service';
-import { CreateUserDTO } from './dto/comment.dto';
+import { CommentsService } from '../application (BLL)/comments.service';
 import { BasicAuthGuard } from '../../auth/api/guards/basic-auth.guard';
+import { CreatePostDTO } from '../../posts/api/dto/posts.dto';
+import { JwtAuthGuard } from '../../auth/api/guards/jwt-auth.guard';
+import { CreateCommentDTO } from './dto/comment.dto';
 
-@Controller('users')
+@Controller('comments')
 export class CommentsController {
-  constructor(protected usersService: UsersService) {}
+  constructor(protected commentsService: CommentsService) {}
 
-  @UseGuards(BasicAuthGuard)
-  @Get()
-  async getAllUsers(
-    @Query()
-    query: {
-      PageNumber: string;
-      PageSize: string;
-      SortBy;
-      SortDirection;
-      searchLoginTerm: string | null;
-      searchEmailTerm: string | null;
-    },
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
+  @Put('/:commentId')
+  async updateComment(
+    @Param('commentId') commentId: string,
+    @Body() { content }: CreateCommentDTO,
+    @Request() req,
   ) {
-    const users = await this.usersService.getAllUsers(
-      query.PageNumber,
-      query.PageSize,
-      query.SortBy,
-      query.SortDirection,
-      query.searchLoginTerm,
-      query.searchEmailTerm,
+    const comment = await this.commentsService.getCommentById(commentId);
+
+    if (!comment) {
+      throw new BadRequestException({
+        errorsMessages: [
+          { message: 'Problem with a commentId field', field: 'commentId' },
+        ],
+      });
+    }
+
+    //ОШИБКА С ИКСЕПШИНОМ, ЕСЛИ КОММЕНТ НЕ ПОЛЬЗОВАТЕЛЯ
+    if (req.user.id !== comment.userId) {
+      throw new BadRequestException({
+        errorsMessages: [
+          {
+            message: 'You cant edit the comment that is not your own',
+            field: '',
+          },
+        ],
+      });
+    }
+
+    const updatedPost = await this.commentsService.updateComment(
+      commentId,
+      content,
     );
-    return users;
-  }
 
-  @UseGuards(BasicAuthGuard)
-  @Post()
-  async createUser(
-    @Body()
-    { login, password, email }: CreateUserDTO,
-  ) {
-    return await this.usersService.createUser(login, password, email);
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @Delete(':id')
-  async deleteUser(@Param('id') userId: string) {
-    const deletedUser = await this.usersService.deleteUser(userId);
-
-    if (deletedUser) {
+    if (updatedPost) {
       return true;
     } else {
-      //404
+      return false;
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
+  @Delete(':commentId')
+  async deleteComment(@Param('commentId') commentId: string, @Request() req) {
+    const comment = await this.commentsService.getCommentById(commentId);
+
+    if (!comment) {
+      throw new BadRequestException({
+        errorsMessages: [
+          { message: 'Problem with a commentId field', field: 'commentId' },
+        ],
+      });
+    }
+
+    //ОШИБКА С ИКСЕПШИНОМ, ЕСЛИ КОММЕНТ НЕ ПОЛЬЗОВАТЕЛЯ
+    if (req.user.id !== comment.userId) {
+      throw new BadRequestException({
+        errorsMessages: [
+          {
+            message: 'You cant edit the comment that is not your own',
+            field: '',
+          },
+        ],
+      });
+    }
+
+    const deletedComment = await this.commentsService.deleteComment(commentId);
+
+    if (deletedComment) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @HttpCode(200)
+  @Get('/:id')
+  async getCommentById(@Param('id') id: string) {
+    const comment = await this.commentsService.getCommentById(id);
+
+    if (comment) {
+      return comment;
+    } else {
       throw new BadRequestException([
-        { message: 'User with that Id was not found', field: 'userId' },
+        { message: 'Comment with that Id not found', field: 'commentId' },
       ]);
     }
   }

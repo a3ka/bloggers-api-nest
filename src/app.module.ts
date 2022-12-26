@@ -36,6 +36,13 @@ import { JwtStrategy } from './modules/auth/api/strategies/jwt.strategy';
 import { GenerateHash } from './modules/users/application (BLL)/generate-hash';
 import { BasicStrategy } from './modules/auth/api/strategies/basic.strategy';
 import { AuthService } from './modules/auth/application (BLL)/auth.service';
+import {
+  Comment,
+  CommentSchema,
+} from './modules/comments/infrastructure (DAL)/domain/comment.schema';
+import { CommentsController } from './modules/comments/api/comments.controller';
+import { CommentsService } from './modules/comments/application (BLL)/comments.service';
+import { CommentsRepository } from './modules/comments/infrastructure (DAL)/comments.repository';
 
 @Module({
   imports: [
@@ -47,6 +54,7 @@ import { AuthService } from './modules/auth/application (BLL)/auth.service';
       { name: Post.name, schema: PostsSchema },
       { name: User.name, schema: UsersSchema },
       { name: Auth.name, schema: AuthSchema },
+      { name: Comment.name, schema: CommentSchema },
     ]),
     PassportModule,
     JwtModule.register({
@@ -61,6 +69,7 @@ import { AuthService } from './modules/auth/application (BLL)/auth.service';
     TestingController,
     UsersController,
     AuthController,
+    CommentsController,
   ],
   providers: [
     AppService,
@@ -70,6 +79,8 @@ import { AuthService } from './modules/auth/application (BLL)/auth.service';
     PostsRepository,
     UsersService,
     UsersRepository,
+    CommentsService,
+    CommentsRepository,
     AuthService,
     GenerateHash,
     LocalStrategy,

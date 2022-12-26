@@ -6,7 +6,7 @@ import { UsersType } from '../../../types/types';
 @Injectable()
 export class AuthLoginUC {
   // constructor(
-  //   protected usersRepository: UsersRepository,
+  //   protected usersRepository: CommentsRepository,
   //   protected jwtService: JwtService,
   // ) {}
   //

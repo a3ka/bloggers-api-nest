@@ -1,3 +1,5 @@
+import { Prop } from '@nestjs/mongoose';
+
 export type BlogType = {
   id?: string;
   name: string;
@@ -62,22 +64,27 @@ export type UserDBType = {
   isConfirmed?: boolean;
 };
 
-// export type UsersExtendedType = {
-//   pagesCount: number;
-//   pageSize: number;
-//   page: number;
-//   totalCount: Query<
-//     number,
-//     Document &
-//       User & { _id: Types.ObjectId } & Required<{ _id: Types.ObjectId }>,
-//     {},
-//     Document & User & { _id: Types.ObjectId }
-//   >;
-//   items: Query<
-//     LeanDocument<Array<HydratedDocument<UserDocument>>[number]>[],
-//     Document &
-//       User & { _id: Types.ObjectId } & Required<{ _id: Types.ObjectId }>,
-//     {},
-//     Document & User & { _id: Types.ObjectId }
-//   >;
-// };
+export type CommentsType = {
+  id: string;
+  content: string;
+  userId: string;
+  userLogin: string;
+  createdAt: Date;
+};
+
+export type CommentsTypeDB = {
+  postId: string;
+  id: string;
+  content: string;
+  userId: string;
+  userLogin: string;
+  createdAt: Date;
+};
+
+export type CommentsExtendedType = {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: [CommentsType | CommentsType[]];
+};

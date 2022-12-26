@@ -4,28 +4,30 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
   Query,
-  Headers,
   BadRequestException,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { PostsService } from '../application (BLL)/posts.service';
 import { BlogsService } from '../../blogs/application BLL/blogs.service';
 import { CreatePostDTO } from './dto/posts.dto';
-import { AuthService } from '../../auth/application (BLL)/auth.service';
 import { BasicAuthGuard } from '../../auth/api/guards/basic-auth.guard';
+import { JwtAuthGuard } from '../../auth/api/guards/jwt-auth.guard';
+import { CommentsService } from '../../comments/application (BLL)/comments.service';
+import { CreateCommentDTO } from '../../comments/api/dto/comment.dto';
+import { UsersRepository } from '../../users/infrastructure (DAL)/users.repository';
 
 @Controller('posts')
 export class PostsController {
   constructor(
     protected postsService: PostsService,
     protected bloggersService: BlogsService,
-    protected authService: AuthService,
+    protected commentsService: CommentsService,
+    protected usersRepository: UsersRepository,
   ) {}
 
   @Get()
@@ -149,7 +151,7 @@ export class PostsController {
   @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   @Put('/:postId')
-  async updateBlogger(
+  async updatePost(
     @Param('postId') postId: string,
     @Body() { title, shortDescription, content, blogId }: CreatePostDTO,
   ) {
@@ -197,5 +199,76 @@ export class PostsController {
         { message: 'Post with that Id was not found', field: 'postId' },
       ]);
     }
+  }
+
+  @HttpCode(200)
+  @Get('/:postId/comments')
+  async getCommentsByPostId(
+    @Param('postId') postId: string,
+    @Query()
+    query: {
+      PageNumber: string;
+      PageSize: string;
+      SortBy: string;
+      SortDirection: string;
+    },
+  ) {
+    if (typeof postId !== 'string') {
+      throw new BadRequestException({
+        errorsMessages: [
+          { message: 'PostId is not a string', field: 'postId' },
+        ],
+      });
+    }
+
+    const post = await this.postsService.getPostById(postId);
+
+    if (!post) {
+      throw new BadRequestException([
+        { message: 'Post with that Id not found', field: 'postId' },
+      ]);
+    }
+
+    const comments = await this.commentsService.getCommentsByPostId(
+      query.PageNumber,
+      query.PageSize,
+      query.SortBy,
+      query.SortDirection,
+      postId,
+    );
+
+    return comments;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/:postId/comments')
+  async createComment(
+    @Param('postId') postId: string,
+    @Body()
+    { content }: CreateCommentDTO,
+    @Request() req,
+  ) {
+    debugger;
+    const post = await this.postsService.getPostById(postId);
+
+    if (!post) {
+      {
+        throw new BadRequestException([
+          { message: 'Post with that Id not found', field: 'postId' },
+        ]);
+      }
+    }
+
+    const userId = await this.usersRepository.findUserById(req.user.id);
+
+    const newComment = await this.commentsService.createCommentByPostId(
+      postId,
+      content,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      userId._doc.id,
+    );
+
+    return newComment;
   }
 }
