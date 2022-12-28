@@ -62,12 +62,12 @@ const usersSchema = new mongoose.Schema<UsersType>({
   email: String,
 });
 
-const usersEmailConfDataSchema = new mongoose.Schema<UsersEmailConfDataType>({
-  email: String,
-  confirmationCode: String,
-  expirationDate: Date,
-  isConfirmed: Boolean,
-});
+// const usersEmailConfDataSchema = new mongoose.Schema<UsersEmailConfDataType>({
+//   email: String,
+//   confirmationCode: String,
+//   expirationDate: Date,
+//   isConfirmed: Boolean,
+// });
 
 const commentsSchema = new mongoose.Schema<CommentType>(
   {
@@ -96,10 +96,10 @@ export const usersCollection = db.collection<UsersType>('users');
 //export const UsersModel = mongoose.model('users', usersSchema);
 
 // export const usersEmailConfDataCollection = db.collection<UsersEmailConfDataType>("usersEmailConfData")
-export const usersEmailConfDataModel = mongoose.model(
-  'usersEmailConfData',
-  usersEmailConfDataSchema,
-);
+// export const usersEmailConfDataModel = mongoose.model(
+//   'usersEmailConfData',
+//   usersEmailConfDataSchema,
+// );
 
 // export const commentsCollection = db.collection<CommentType>("comments")
 export const CommentsModel = mongoose.model('comments', commentsSchema);

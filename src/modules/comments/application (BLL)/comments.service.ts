@@ -41,7 +41,6 @@ export class CommentsService {
     const post = await this.postsRepository.getPostById(postId);
     const user = await this.usersRepository.findUserById(userId);
 
-    debugger;
     if (post) {
       const newComment = {
         postId: postId,

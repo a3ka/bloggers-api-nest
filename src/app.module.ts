@@ -23,6 +23,8 @@ import { UsersRepository } from './modules/users/infrastructure (DAL)/users.repo
 import {
   User,
   UsersSchema,
+  UsersUnconfirmedSchema,
+  UserUnconfirmed,
 } from './modules/users/infrastructure (DAL)/domain/users.schema';
 import { AuthController } from './modules/auth/api/auth.controller';
 import {
@@ -43,6 +45,8 @@ import {
 import { CommentsController } from './modules/comments/api/comments.controller';
 import { CommentsService } from './modules/comments/application (BLL)/comments.service';
 import { CommentsRepository } from './modules/comments/infrastructure (DAL)/comments.repository';
+import { MailModule } from './modules/common-services/mail/mail.module';
+import { MailService } from './modules/common-services/mail/mail.service';
 
 @Module({
   imports: [
@@ -53,6 +57,7 @@ import { CommentsRepository } from './modules/comments/infrastructure (DAL)/comm
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostsSchema },
       { name: User.name, schema: UsersSchema },
+      { name: UserUnconfirmed.name, schema: UsersUnconfirmedSchema },
       { name: Auth.name, schema: AuthSchema },
       { name: Comment.name, schema: CommentSchema },
     ]),
@@ -61,6 +66,7 @@ import { CommentsRepository } from './modules/comments/infrastructure (DAL)/comm
       secret: process.env.JWT_SECRET || '123',
       signOptions: { expiresIn: '5m' },
     }),
+    MailModule,
   ],
   controllers: [
     AppController,
@@ -86,6 +92,7 @@ import { CommentsRepository } from './modules/comments/infrastructure (DAL)/comm
     LocalStrategy,
     JwtStrategy,
     BasicStrategy,
+    MailService,
   ],
 })
 export class AppModule {}

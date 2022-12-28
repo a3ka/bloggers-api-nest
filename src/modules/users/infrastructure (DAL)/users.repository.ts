@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User, UserDocument } from './domain/users.schema';
+import {
+  User,
+  UserDocument,
+  UserUnconfirmed,
+  UserUnconfirmedDocument,
+} from './domain/users.schema';
 import {
   PostsExtendedType,
   PostType,
@@ -9,12 +14,13 @@ import {
   UsersExtendedType,
   UsersType,
 } from '../../../types/types';
-import { PostsModel } from '../../../db';
 
 @Injectable()
 export class UsersRepository {
   constructor(
     @InjectModel(User.name) private UsersModel: Model<UserDocument>,
+    @InjectModel(UserUnconfirmed.name)
+    private UsersUnconfirmedModel: Model<UserUnconfirmedDocument>,
   ) {}
 
   async getAllUsers(
@@ -111,7 +117,7 @@ export class UsersRepository {
     return result;
   }
 
-  async createUser(newUser: UserDBType): Promise<UserDBType> {
+  async createUser(newUser: UsersType): Promise<UsersType> {
     await this.UsersModel.insertMany([newUser]);
     // await this.UsersModel.insertOne(newUser)
     const user = await this.UsersModel.findOne(
@@ -128,8 +134,6 @@ export class UsersRepository {
     const result = await this.UsersModel.deleteOne({ id: id });
     return result.deletedCount === 1;
   }
-
-  //----------------------------------------------------------------------
 
   async deleteAllUsers(): Promise<boolean> {
     const result = await this.UsersModel.deleteMany({});
@@ -153,6 +157,8 @@ export class UsersRepository {
       { _id: 0, email: 0, __v: 0 },
       // { _id: 0, email: 0, isConfirmed: 0, __v: 0 },
     );
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return user;
   }
 
@@ -161,7 +167,32 @@ export class UsersRepository {
       { id: userId },
       { _id: 0, passwordHash: 0, passwordSalt: 0, isConfirmed: 0, __v: 0 },
     );
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return user;
+  }
+
+  async createUnconfirmedUser(newUser: UserDBType): Promise<boolean> {
+    const result = await this.UsersUnconfirmedModel.insertMany([newUser]);
+    if (result) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async findUserByConfirmCode(confirmationCode: string): Promise<UserDBType> {
+    return this.UsersUnconfirmedModel.findOne(
+      { 'emailConfirmation.confirmationCode': confirmationCode },
+      { _id: 0, __v: 0 },
+    );
+  }
+
+  async deleteUnconfirmedUser(email: string): Promise<boolean> {
+    const result = await this.UsersUnconfirmedModel.deleteOne({
+      'accountData.email': email,
+    });
+    return result.deletedCount === 1;
   }
 }
 

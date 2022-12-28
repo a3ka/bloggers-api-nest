@@ -61,7 +61,6 @@ export class PostsRepository {
     let posts = null;
     let postsCount = null;
     let pagesCount = null;
-    debugger;
 
     if (blogId) {
       posts = await this.PostModel.find({ blogId }, { _id: 0, __v: 0 })

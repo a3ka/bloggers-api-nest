@@ -248,7 +248,6 @@ export class PostsController {
     { content }: CreateCommentDTO,
     @Request() req,
   ) {
-    debugger;
     const post = await this.postsService.getPostById(postId);
 
     if (!post) {

@@ -56,7 +56,6 @@ export class CommentsRepository {
   async createComment(
     newComment: CommentsTypeDB,
   ): Promise<CommentsType | undefined> {
-    debugger;
     await this.CommentModel.insertMany([newComment]);
     const comment = await this.CommentModel.findOne(
       { id: newComment.id },

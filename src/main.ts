@@ -5,7 +5,7 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './http-exception.filter';
 
 async function bootstrap() {
-  await runDb();
+  // await runDb();
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   app.useGlobalPipes(

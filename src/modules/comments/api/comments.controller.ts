@@ -13,8 +13,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CommentsService } from '../application (BLL)/comments.service';
-import { BasicAuthGuard } from '../../auth/api/guards/basic-auth.guard';
-import { CreatePostDTO } from '../../posts/api/dto/posts.dto';
 import { JwtAuthGuard } from '../../auth/api/guards/jwt-auth.guard';
 import { CreateCommentDTO } from './dto/comment.dto';
 

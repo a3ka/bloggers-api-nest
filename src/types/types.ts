@@ -1,4 +1,5 @@
 import { Prop } from '@nestjs/mongoose';
+import add from 'date-fns/add';
 
 export type BlogType = {
   id?: string;
@@ -37,11 +38,12 @@ export type PostsExtendedType = {
 
 export type UsersType = {
   id?: string;
-  login?: string;
+  login: string;
   email?: string;
   passwordHash?: string;
   passwordSalt?: string;
-  createdAt?: string;
+  createdAt?: Date;
+  // createdAt: string;
   isConfirmed?: boolean;
 };
 
@@ -54,14 +56,19 @@ export type UsersExtendedType = {
 };
 
 export type UserDBType = {
-  id: string;
-  login: string;
-  email: string;
-  passwordHash: string;
-  passwordSalt: string;
-  createdAt: Date;
-  // createdAt: string;
-  isConfirmed?: boolean;
+  accountData: {
+    id: string;
+    login: string;
+    email: string;
+    passwordHash: string;
+    passwordSalt: string;
+    createdAt: Date;
+    isConfirmed: boolean;
+  };
+  emailConfirmation: {
+    confirmationCode: string;
+    expirationDate: Date;
+  };
 };
 
 export type CommentsType = {

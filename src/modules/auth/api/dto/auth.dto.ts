@@ -1,8 +1,18 @@
-import { IsString } from 'class-validator';
+import { IsEmail, IsString, Length } from 'class-validator';
 
-export class LoginDTO {
+export class RegistrationDTO {
+  @Length(3, 10)
   @IsString()
-  loginOrEmail: string;
+  login: string;
+  @Length(6, 20)
   @IsString()
   password: string;
+  @IsString()
+  @IsEmail()
+  email: string;
+}
+
+export class ConfirmCodeDTO {
+  @IsString()
+  code: string;
 }

@@ -1,8 +1,19 @@
-import { Controller, Post, UseGuards, Request, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  Request,
+  Get,
+  Body,
+  HttpCode,
+  BadRequestException,
+} from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from '../application (BLL)/auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UsersRepository } from '../../users/infrastructure (DAL)/users.repository';
+import { CreatePostDTO } from '../../posts/api/dto/posts.dto';
+import { ConfirmCodeDTO, RegistrationDTO } from './dto/auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -33,6 +44,7 @@ export class AuthController {
   //   }
   // }
 
+  @HttpCode(200)
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   async login(@Request() req) {
@@ -40,11 +52,39 @@ export class AuthController {
     return { accessToken: result.accessToken };
   }
 
+  @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Get('/me')
   async getProfile(@Request() req) {
     // const user = this.userRepo.findUserByLoginOrEmail(req.user.id);
     const user = this.usersRepository.findUserById(req.user.id);
     return user;
+  }
+
+  @HttpCode(204)
+  @Post('/registration')
+  async registration(
+    @Body()
+    { login, password, email }: RegistrationDTO,
+  ) {
+    return await this.authService.userRegistration(login, password, email);
+  }
+
+  @HttpCode(204)
+  @Post('/registration-confirmation')
+  async registrationConfirmation(@Body() code: ConfirmCodeDTO) {
+    const result = await this.authService.registrationConfirmation(code.code);
+    if (result) {
+      return true;
+    } else {
+      // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      throw new BadRequestException([
+        {
+          message:
+            'Your confirmation code is incorrect, expired or already been applied',
+          field: '',
+        },
+      ]);
+    }
   }
 }

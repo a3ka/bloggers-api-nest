@@ -35,7 +35,7 @@ export class UsersService {
     login: string,
     password: string,
     email: string,
-  ): Promise<UserDBType> {
+  ): Promise<UsersType> {
     const passwordSalt = await bcrypt.genSalt(10);
     const passwordHash = await this.hashGenerator._generateHash(
       password,
