@@ -3,7 +3,7 @@ import { UserDBType, UsersExtendedType, UsersType } from '../../../types/types';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
-import { GenerateHash } from './generate-hash';
+import { GenerateHash } from '../../common-services/generate-hash';
 
 @Injectable()
 export class UsersService {

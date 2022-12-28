@@ -35,7 +35,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './modules/auth/api/strategies/local.strategy';
 import { JwtStrategy } from './modules/auth/api/strategies/jwt.strategy';
-import { GenerateHash } from './modules/users/application (BLL)/generate-hash';
+import { GenerateHash } from './modules/common-services/generate-hash';
 import { BasicStrategy } from './modules/auth/api/strategies/basic.strategy';
 import { AuthService } from './modules/auth/application (BLL)/auth.service';
 import {

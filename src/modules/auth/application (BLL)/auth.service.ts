@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserDBType, UsersType } from 'src/types/types';
 import { UsersRepository } from '../../users/infrastructure (DAL)/users.repository';
-import { GenerateHash } from '../../users/application (BLL)/generate-hash';
+import { GenerateHash } from '../../common-services/generate-hash';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
 // import add from 'date-fns/add';
