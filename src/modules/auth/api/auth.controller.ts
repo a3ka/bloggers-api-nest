@@ -13,7 +13,7 @@ import { AuthService } from '../application (BLL)/auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UsersRepository } from '../../users/infrastructure (DAL)/users.repository';
 import { CreatePostDTO } from '../../posts/api/dto/posts.dto';
-import { ConfirmCodeDTO, RegistrationDTO } from './dto/auth.dto';
+import { ConfirmCodeDTO, RegistrationDTO, ResendCodeDTO } from './dto/auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -67,13 +67,29 @@ export class AuthController {
     @Body()
     { login, password, email }: RegistrationDTO,
   ) {
-    return await this.authService.userRegistration(login, password, email);
+    const newUser = await this.authService.userRegistration(
+      login,
+      password,
+      email,
+    );
+
+    if (newUser) {
+      return true;
+    } else {
+      // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      throw new BadRequestException([
+        {
+          message: 'User with that email is already exists',
+          field: 'email',
+        },
+      ]);
+    }
   }
 
   @HttpCode(204)
   @Post('/registration-confirmation')
-  async registrationConfirmation(@Body() code: ConfirmCodeDTO) {
-    const result = await this.authService.registrationConfirmation(code.code);
+  async registrationConfirmation(@Body() dto: ConfirmCodeDTO) {
+    const result = await this.authService.registrationConfirmation(dto.code);
     if (result) {
       return true;
     } else {
@@ -86,5 +102,11 @@ export class AuthController {
         },
       ]);
     }
+  }
+
+  @HttpCode(204)
+  @Post('/registration-email-resending')
+  async resendingConfirmCode(@Body() dto: ResendCodeDTO) {
+    return await this.authService.resendEmailWithConfirmCode(dto.email);
   }
 }

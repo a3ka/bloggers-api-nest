@@ -181,7 +181,9 @@ export class UsersRepository {
     }
   }
 
-  async findUserByConfirmCode(confirmationCode: string): Promise<UserDBType> {
+  async findUnconfirmedUserByCode(
+    confirmationCode: string,
+  ): Promise<UserDBType> {
     return this.UsersUnconfirmedModel.findOne(
       { 'emailConfirmation.confirmationCode': confirmationCode },
       { _id: 0, __v: 0 },
@@ -194,116 +196,28 @@ export class UsersRepository {
     });
     return result.deletedCount === 1;
   }
-}
 
-//
-//
-//
-// async findUserById(userId: string): Promise<UsersType> {
-//   const user = await UsersModel.findOne(
-//     { id: userId },
-//     { _id: 0, password: 0, email: 0, isConfirmed: 0, __v: 0 },
-//   );
-//   // @ts-ignore
-//   return user;
-// }
-//
-// async findUserWithEmailById(userId: string): Promise<UsersWithEmailType> {
-//   const user = await UsersModel.findOne(
-//     { id: userId },
-//     { _id: 0, password: 0, isConfirmed: 0, __v: 0 },
-//   );
-//   // @ts-ignore
-//   return user;
-// }
-//
-// async findUserByEmail(email: string) {
-//   const user = await UsersModel.findOne({ email }, { _id: 0, password: 0 });
-//
-//   return user;
-// }
-//
-// async findUserByConfirmCode(confirmationCode: string) {
-//   const emailData = await usersEmailConfDataModel.findOne(
-//     { confirmationCode: confirmationCode },
-//     { projection: { _id: 0 } },
-//   );
-//
-//   const accountData = await UsersModel.findOne(
-//     { email: emailData?.email },
-//     { projection: { _id: 0 } },
-//   );
-//
-//   if (emailData === null && accountData === null) {
-//     const user = {
-//       accountData: undefined,
-//       emailConfirmation: undefined,
-//     };
-//     return user;
-//   } else {
-//     const user = {
-//       accountData,
-//       emailConfirmation: emailData,
-//     };
-//     return user;
-//   }
-// }
-//
-// async insertToDbUnconfirmedEmail(
-//   newUserEmail: UsersEmailConfDataType,
-// ): Promise<boolean> {
-//   const result = await usersEmailConfDataModel.insertMany([newUserEmail]);
-//   // return result.acknowledged  ;
-//   if (result) {
-//     return true;
-//   } else {
-//     return false;
-//   }
-// }
-//
-// async updateUnconfirmedEmailData(
-//   updatedEmailConfirmationData: UsersEmailConfDataType,
-// ): Promise<boolean> {
-//   const result = await usersEmailConfDataModel.updateOne(
-//     { email: updatedEmailConfirmationData.email },
-//     {
-//       $set: {
-//         confirmationCode: updatedEmailConfirmationData.confirmationCode,
-//         expirationDate: updatedEmailConfirmationData.expirationDate,
-//       },
-//     },
-//   );
-//
-//   return result.acknowledged;
-// }
-//
-// async deleteUserUnconfirmedEmail(email: string): Promise<boolean> {
-//   const result = await usersEmailConfDataModel.deleteOne({ email });
-//   return result.deletedCount === 1;
-// }
-//
-// async updateEmailConfirmation(email: string): Promise<UsersType | null> {
-//   const accountDataRes = await UsersModel.updateOne(
-//     { email },
-//     { $set: { isConfirmed: true } },
-//   );
-//
-//   if (!accountDataRes) {
-//     return null;
-//   } else {
-//     await usersEmailConfDataModel.deleteOne({ email });
-//     const result = await UsersModel.findOne(
-//       { email },
-//       { projection: { _id: 0, password: 0, email: 0, isConfirmed: 0 } },
-//     );
-//     return result;
-//   }
-// }
-//
-// async deleteAllUsers(): Promise<boolean> {
-//   await UsersModel.deleteMany({});
-//   await usersEmailConfDataModel.deleteMany({});
-//   return true;
-// }
-//
-//
+  async findUnconfirmedUserByEmail(email: string): Promise<UserDBType> {
+    return this.UsersUnconfirmedModel.findOne(
+      { 'accountData.email': email },
+      { _id: 0, __v: 0 },
+    );
+  }
+
+  async updateUnconfirmedUser(
+    id: string,
+    code: string,
+    expirationDate: Date,
+  ): Promise<boolean> {
+    const result = await this.UsersUnconfirmedModel.updateOne(
+      { id },
+      {
+        $set: {
+          'emailConfirmation.confirmationCode': code,
+          'emailConfirmation.expirationDate': expirationDate,
+        },
+      },
+    );
+    return result.matchedCount === 1;
+  }
+}

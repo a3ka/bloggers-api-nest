@@ -16,3 +16,9 @@ export class ConfirmCodeDTO {
   @IsString()
   code: string;
 }
+
+export class ResendCodeDTO {
+  @IsString()
+  @IsEmail()
+  email: string;
+}

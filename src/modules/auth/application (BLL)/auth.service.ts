@@ -56,6 +56,9 @@ export class AuthService {
   }
 
   async userRegistration(login: string, password: string, email: string) {
+    const user = await this.usersRepository.findUnconfirmedUserByEmail(email);
+    if (user) return false;
+
     const passwordSalt = await bcrypt.genSalt(10);
     const passwordHash = await this.hashGenerator._generateHash(
       password,
@@ -81,7 +84,7 @@ export class AuthService {
       },
     };
 
-    const emailSendResult = await this.mailService.sendUserConfirmation(
+    await this.mailService.sendUserConfirmation(
       email,
       newUser.emailConfirmation.confirmationCode,
     );
@@ -89,8 +92,8 @@ export class AuthService {
     return true;
   }
 
-  async registrationConfirmation(confirmationCode: string): Promise<any> {
-    const user = await this.usersRepository.findUserByConfirmCode(
+  async registrationConfirmation(confirmationCode: string): Promise<boolean> {
+    const user = await this.usersRepository.findUnconfirmedUserByCode(
       confirmationCode,
     );
 
@@ -101,17 +104,29 @@ export class AuthService {
     user.accountData.isConfirmed = true;
     await this.usersRepository.createUser(user.accountData);
     await this.usersRepository.deleteUnconfirmedUser(user.accountData.email);
+    return true;
+  }
+
+  async resendEmailWithConfirmCode(email: string): Promise<any> {
+    const user = await this.usersRepository.findUnconfirmedUserByEmail(email);
+    if (!user) return false;
+
+    user.emailConfirmation.confirmationCode = uuidv4();
+    user.emailConfirmation.expirationDate = addMinutes(new Date(), 60);
+
+    const result = await this.mailService.sendUserConfirmation(
+      email,
+      user.emailConfirmation.confirmationCode,
+    );
+
+    if (result) {
+      await this.usersRepository.updateUnconfirmedUser(
+        user.accountData.id,
+        user.emailConfirmation.confirmationCode,
+        user.emailConfirmation.expirationDate,
+      );
+    }
 
     return true;
-
-    //   const user = await this.usersRepository.registrationConfirmation(
-    //     confirmationCode,
-    //   );
-    //
-    //   if (user) {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
   }
 }
