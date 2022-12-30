@@ -47,6 +47,7 @@ import { CommentsService } from './modules/comments/application (BLL)/comments.s
 import { CommentsRepository } from './modules/comments/infrastructure (DAL)/comments.repository';
 import { MailModule } from './modules/common-services/mail/mail.module';
 import { MailService } from './modules/common-services/mail/mail.service';
+import { JwtCookiesStrategy } from './modules/auth/api/strategies/!!!jwt-cookies.strategy';
 
 @Module({
   imports: [
@@ -92,6 +93,7 @@ import { MailService } from './modules/common-services/mail/mail.service';
     LocalStrategy,
     JwtStrategy,
     BasicStrategy,
+    // JwtCookiesStrategy,
     MailService,
   ],
 })

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserDBType, UsersType } from 'src/types/types';
+import { TokenPairType, UserDBType, UsersType } from 'src/types/types';
 import { UsersRepository } from '../../users/infrastructure (DAL)/users.repository';
 import { GenerateHash } from '../../common-services/generate-hash';
 import { v4 as uuidv4 } from 'uuid';
@@ -44,15 +44,50 @@ export class AuthService {
     return restUserData;
   }
 
-  async login(user: any) {
-    const payload = { sub: user.id };
-    // const accessToken = this.jwtService.sign(user);
+  async getRefreshAccessToken(
+    user: any,
+    rfToken: string,
+  ): Promise<boolean | TokenPairType> {
+    let payload;
+    let userId;
+    let tokenExpTime;
+
+    if (user) {
+      payload = { sub: user.id };
+    }
+
+    if (rfToken) {
+      const result: any = await this.jwtService.verify(rfToken, {
+        secret: process.env.JWT_SECRET || '123',
+      });
+
+      userId = result.sub;
+      tokenExpTime = result.exp;
+
+      debugger;
+
+      if (!result) return false;
+      if (!tokenExpTime) return false;
+
+      payload = { sub: userId };
+    }
+
+    const accessToken = this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET || '123',
+      expiresIn: 1000000,
+    });
+
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET || '123',
+      expiresIn: 2000000,
+    });
+
+    const jwtTokenPair = { accessToken, refreshToken };
+
+    return jwtTokenPair;
     // return {
-    //   access_token: accessToken,
+    //   accessToken: this.jwtService.sign(payload),
     // };
-    return {
-      accessToken: this.jwtService.sign(payload),
-    };
   }
 
   async userRegistration(login: string, password: string, email: string) {
@@ -126,7 +161,6 @@ export class AuthService {
         user.emailConfirmation.expirationDate,
       );
     }
-
     return true;
   }
 }

@@ -95,3 +95,8 @@ export type CommentsExtendedType = {
   totalCount: number;
   items: [CommentsType | CommentsType[]];
 };
+
+export type TokenPairType = {
+  accessToken: string;
+  refreshToken: string;
+};

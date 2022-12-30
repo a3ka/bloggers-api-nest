@@ -7,13 +7,15 @@ import {
   Body,
   HttpCode,
   BadRequestException,
+  Res,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from '../application (BLL)/auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UsersRepository } from '../../users/infrastructure (DAL)/users.repository';
-import { CreatePostDTO } from '../../posts/api/dto/posts.dto';
 import { ConfirmCodeDTO, RegistrationDTO, ResendCodeDTO } from './dto/auth.dto';
+import { Cookies } from '../../../decorators/cookies-parser.decorator';
+import { TokenPairType } from '../../../types/types';
 
 @Controller('auth')
 export class AuthController {
@@ -22,34 +24,27 @@ export class AuthController {
     protected usersRepository: UsersRepository,
     protected authService: AuthService,
   ) {}
-  //
-  // @Post('/login')
-  // async authLogin(
-  //   @Body()
-  //   { loginOrEmail, password }: LoginDTO,
-  // ) {
-  //   const user = await this.login._authLogin(loginOrEmail, password);
-  //   if (user) {
-  //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //     // @ts-ignore
-  //     const token = await this.jwtService.createJWTPair(user);
-  //     return token;
-  //   } else {
-  //     throw new BadRequestException([
-  //       {
-  //         message: 'User with that email or login was not found',
-  //         field: 'user email or login',
-  //       },
-  //     ]);
-  //   }
-  // }
 
   @HttpCode(200)
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Request() req) {
-    const result = await this.authService.login(req.user._doc);
-    return { accessToken: result.accessToken };
+  async login(@Request() req, @Res({ passthrough: true }) res: Response) {
+    // const jwtTokenPair = await this.authService.login(req.user._doc);
+
+    const jwtTokenPair = await this.authService.getRefreshAccessToken(
+      req.user._doc,
+      null,
+    );
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    res.cookie('refreshToken', jwtTokenPair.refreshToken, {
+      httpOnly: true,
+      secure: false,
+    });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return { accessToken: jwtTokenPair.accessToken };
   }
 
   @HttpCode(200)
@@ -108,5 +103,26 @@ export class AuthController {
   @Post('/registration-email-resending')
   async resendingConfirmCode(@Body() dto: ResendCodeDTO) {
     return await this.authService.resendEmailWithConfirmCode(dto.email);
+  }
+
+  @HttpCode(200)
+  // @UseGuards(JwtCookiesAuthGuard)
+  @Post('/refresh-token')
+  async getNewRefreshAccessToken(
+    @Res({ passthrough: true }) res: Response,
+    @Cookies('refreshToken')
+    refreshToken: string,
+  ) {
+    const jwtTokenPair: boolean | TokenPairType =
+      await this.authService.getRefreshAccessToken(null, refreshToken);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    res.cookie('refreshToken', jwtTokenPair.refreshToken, {
+      httpOnly: true,
+      secure: false,
+    });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return { accessToken: jwtTokenPair.accessToken };
   }
 }
