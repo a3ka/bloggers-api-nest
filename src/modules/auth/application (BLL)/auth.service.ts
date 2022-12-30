@@ -8,11 +8,13 @@ import * as bcrypt from 'bcrypt';
 // import add from 'date-fns/add';
 import { addMinutes } from 'date-fns';
 import { MailService } from 'src/modules/common-services/mail/mail.service';
+import {QueryRepository} from "../../../queryRepository/query.repository";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersRepository: UsersRepository,
+    private readonly queryRepository: QueryRepository,
     private readonly hashGenerator: GenerateHash,
     private readonly jwtService: JwtService,
     private mailService: MailService,
@@ -60,17 +62,21 @@ export class AuthService {
       const result: any = await this.jwtService.verify(rfToken, {
         secret: process.env.JWT_SECRET || '123',
       });
-
+      debugger;
       userId = result.sub;
       tokenExpTime = result.exp;
-
+      const blacklist = await this.queryRepository.checkRFTokenInBlacklist(
+        rfToken,
+      );
       debugger;
-
+      if (blacklist) return false;
       if (!result) return false;
       if (!tokenExpTime) return false;
 
       payload = { sub: userId };
     }
+
+    await this.queryRepository.addRFTokenInBlacklist(rfToken);
 
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET || '123',

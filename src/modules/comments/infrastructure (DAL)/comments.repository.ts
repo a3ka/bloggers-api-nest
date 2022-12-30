@@ -84,4 +84,9 @@ export class CommentsRepository {
     );
     return comment;
   }
+
+  async deleteAllComments(): Promise<boolean> {
+    const result = await this.CommentModel.deleteMany({});
+    return true;
+  }
 }

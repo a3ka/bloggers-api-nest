@@ -48,6 +48,11 @@ import { CommentsRepository } from './modules/comments/infrastructure (DAL)/comm
 import { MailModule } from './modules/common-services/mail/mail.module';
 import { MailService } from './modules/common-services/mail/mail.service';
 import { JwtCookiesStrategy } from './modules/auth/api/strategies/!!!jwt-cookies.strategy';
+import {
+  RefreshTokensBL,
+  refreshTokensBLSchema,
+} from './queryRepository/refreshTokensBL.schema';
+import {QueryRepository} from "./queryRepository/query.repository";
 
 @Module({
   imports: [
@@ -61,6 +66,7 @@ import { JwtCookiesStrategy } from './modules/auth/api/strategies/!!!jwt-cookies
       { name: UserUnconfirmed.name, schema: UsersUnconfirmedSchema },
       { name: Auth.name, schema: AuthSchema },
       { name: Comment.name, schema: CommentSchema },
+      { name: RefreshTokensBL.name, schema: refreshTokensBLSchema },
     ]),
     PassportModule,
     JwtModule.register({
@@ -88,6 +94,7 @@ import { JwtCookiesStrategy } from './modules/auth/api/strategies/!!!jwt-cookies
     UsersRepository,
     CommentsService,
     CommentsRepository,
+    QueryRepository,
     AuthService,
     GenerateHash,
     LocalStrategy,
