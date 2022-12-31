@@ -17,7 +17,6 @@ export class QueryRepository {
   ) {}
 
   async checkRFTokenInBlacklist(code: string): Promise<boolean> {
-    debugger;
     const result = await this.RefreshTokensBLModel.findOne(
       { refreshToken: code },
       { _id: 0, __v: 0 },
@@ -26,8 +25,7 @@ export class QueryRepository {
     return false;
   }
 
-  async addRFTokenInBlacklist(rfToken: string): Promise<boolean> {
-    debugger;
+  async addRFTokenToBlacklist(rfToken: string): Promise<boolean> {
     const result = await this.RefreshTokensBLModel.insertMany([
       { refreshToken: rfToken },
     ]);

@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 // import add from 'date-fns/add';
 import { addMinutes } from 'date-fns';
 import { MailService } from 'src/modules/common-services/mail/mail.service';
-import {QueryRepository} from "../../../queryRepository/query.repository";
+import { QueryRepository } from '../../../queryRepository/query.repository';
 
 @Injectable()
 export class AuthService {
@@ -62,13 +62,11 @@ export class AuthService {
       const result: any = await this.jwtService.verify(rfToken, {
         secret: process.env.JWT_SECRET || '123',
       });
-      debugger;
       userId = result.sub;
       tokenExpTime = result.exp;
       const blacklist = await this.queryRepository.checkRFTokenInBlacklist(
         rfToken,
       );
-      debugger;
       if (blacklist) return false;
       if (!result) return false;
       if (!tokenExpTime) return false;
@@ -76,7 +74,7 @@ export class AuthService {
       payload = { sub: userId };
     }
 
-    await this.queryRepository.addRFTokenInBlacklist(rfToken);
+    await this.queryRepository.addRFTokenToBlacklist(rfToken);
 
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET || '123',
@@ -167,6 +165,24 @@ export class AuthService {
         user.emailConfirmation.expirationDate,
       );
     }
+    return true;
+  }
+
+  async logout(rfToken: string): Promise<boolean | TokenPairType> {
+    const tokenData: any = await this.jwtService.verify(rfToken, {
+      secret: process.env.JWT_SECRET || '123',
+    });
+    const tokenExpTime = tokenData.exp;
+    const blacklist = await this.queryRepository.checkRFTokenInBlacklist(
+      rfToken,
+    );
+
+    if (blacklist) return false;
+    if (!tokenData) return false;
+    if (!tokenExpTime) return false;
+
+    await this.queryRepository.addRFTokenToBlacklist(rfToken);
+
     return true;
   }
 }

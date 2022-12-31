@@ -115,6 +115,16 @@ export class AuthController {
   ) {
     const jwtTokenPair: boolean | TokenPairType =
       await this.authService.getRefreshAccessToken(null, refreshToken);
+
+    if (!jwtTokenPair) {
+      throw new BadRequestException([
+        {
+          message: 'Your token is incorrect, expired or in the blacklist',
+          field: 'refreshToken',
+        },
+      ]);
+    }
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     res.cookie('refreshToken', jwtTokenPair.refreshToken, {
@@ -124,5 +134,17 @@ export class AuthController {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return { accessToken: jwtTokenPair.accessToken };
+  }
+
+  @HttpCode(204)
+  // @UseGuards(JwtCookiesAuthGuard)
+  @Post('/logout')
+  async logout(
+    @Cookies('refreshToken')
+    refreshToken: string,
+  ) {
+    await this.authService.logout(refreshToken);
+
+    return true;
   }
 }

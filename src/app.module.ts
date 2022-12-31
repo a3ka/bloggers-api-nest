@@ -47,15 +47,16 @@ import { CommentsService } from './modules/comments/application (BLL)/comments.s
 import { CommentsRepository } from './modules/comments/infrastructure (DAL)/comments.repository';
 import { MailModule } from './modules/common-services/mail/mail.module';
 import { MailService } from './modules/common-services/mail/mail.service';
-import { JwtCookiesStrategy } from './modules/auth/api/strategies/!!!jwt-cookies.strategy';
 import {
   RefreshTokensBL,
   refreshTokensBLSchema,
 } from './queryRepository/refreshTokensBL.schema';
-import {QueryRepository} from "./queryRepository/query.repository";
+import { QueryRepository } from './queryRepository/query.repository';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forRoot(
       'mongodb+srv://alexk:123qweasd@cluster0.lapbhyv.mongodb.net/socialNetwork',
     ),
