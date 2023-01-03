@@ -42,7 +42,7 @@ export type UsersType = {
   email?: string;
   passwordHash?: string;
   passwordSalt?: string;
-  createdAt?: Date;
+  createdAt?: string;
   // createdAt: string;
   isConfirmed?: boolean;
 };

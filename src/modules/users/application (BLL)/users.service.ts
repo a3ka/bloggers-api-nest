@@ -48,7 +48,7 @@ export class UsersService {
       email,
       passwordHash,
       passwordSalt,
-      createdAt: new Date(),
+      createdAt: new Date().toString(),
       // createdAt: new Date().toString(),
       // isConfirmed: false,
     };
