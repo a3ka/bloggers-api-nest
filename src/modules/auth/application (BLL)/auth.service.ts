@@ -78,12 +78,12 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET || '123',
-      expiresIn: 1000000,
+      expiresIn: 10000,
     });
 
     const refreshToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET || '123',
-      expiresIn: 2000000,
+      expiresIn: 20000,
     });
 
     const jwtTokenPair = { accessToken, refreshToken };
