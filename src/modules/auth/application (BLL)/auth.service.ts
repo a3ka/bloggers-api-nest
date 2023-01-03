@@ -58,8 +58,6 @@ export class AuthService {
       payload = { sub: user.id };
     }
 
-    if (!rfToken) return false;
-
     if (rfToken) {
       const result: any = await this.jwtService.verify(rfToken, {
         secret: process.env.JWT_SECRET || '123',
@@ -74,9 +72,11 @@ export class AuthService {
       if (!tokenExpTime) return false;
 
       payload = { sub: userId };
+
+      await this.queryRepository.addRFTokenToBlacklist(rfToken);
     }
 
-    await this.queryRepository.addRFTokenToBlacklist(rfToken);
+    if (!user && !rfToken) return false;
 
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET || '123',
