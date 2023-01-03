@@ -18,8 +18,8 @@ import { BasicGuards } from '../../auth/api/guards/basic.guard';
 export class UsersController {
   constructor(protected usersService: UsersService) {}
 
-  // @UseGuards(BasicAuthGuard)
-  @UseGuards(BasicGuards)
+  @UseGuards(BasicAuthGuard)
+  // @UseGuards(BasicGuards)
   @Get()
   async getAllUsers(
     @Query()
@@ -43,7 +43,7 @@ export class UsersController {
     return users;
   }
 
-  @UseGuards(BasicGuards)
+  @UseGuards(BasicAuthGuard)
   @Post()
   async createUser(
     @Body()
@@ -52,7 +52,7 @@ export class UsersController {
     return await this.usersService.createUser(login, password, email);
   }
 
-  @UseGuards(BasicGuards)
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   async deleteUser(@Param('id') userId: string) {
     const deletedUser = await this.usersService.deleteUser(userId);
