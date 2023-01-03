@@ -58,6 +58,8 @@ export class AuthService {
       payload = { sub: user.id };
     }
 
+    if (!rfToken) return false;
+
     if (rfToken) {
       const result: any = await this.jwtService.verify(rfToken, {
         secret: process.env.JWT_SECRET || '123',

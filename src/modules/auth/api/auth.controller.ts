@@ -124,15 +124,6 @@ export class AuthController {
     @Cookies('refreshToken')
     refreshToken: string,
   ) {
-    if (!refreshToken) {
-      throw new BadRequestException([
-        {
-          message: 'RefreshToken is not provided or expired',
-          field: 'refreshToken',
-        },
-      ]);
-    }
-
     const jwtTokenPair: boolean | TokenPairType =
       await this.authService.getRefreshAccessToken(null, refreshToken);
 
