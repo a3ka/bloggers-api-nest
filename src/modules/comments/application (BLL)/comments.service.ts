@@ -48,7 +48,7 @@ export class CommentsService {
         content: content,
         userId,
         userLogin: user.login,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
         // likesInfo: {
         //   likesCount: 0,
         //   dislikesCount: 0,

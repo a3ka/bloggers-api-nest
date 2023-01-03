@@ -44,7 +44,7 @@ export class BlogsService {
       name,
       description,
       websiteUrl,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
       // createdAt: (+new Date()).toString(),
     };
     const createdBlog = await this.blogsRepository.createBlog(newBlog);
@@ -87,7 +87,7 @@ export class BlogsService {
       content,
       blogId: blog.id,
       blogName: blog.name,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
       // createdAt: (+new Date()).toString(),
     };
 

@@ -16,7 +16,7 @@ export class Comment {
   @Prop()
   userLogin: string;
   @Prop()
-  createdAt: Date;
+  createdAt: string;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

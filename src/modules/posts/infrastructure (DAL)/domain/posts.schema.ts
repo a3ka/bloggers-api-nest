@@ -43,7 +43,7 @@ export class Post {
   @Prop()
   blogName: string;
   @Prop()
-  createdAt: Date;
+  createdAt: string;
   // @Prop({ type: ExtendedLikesInfo })
   // extendedLikesInfo: ExtendedLikesInfo;
 }

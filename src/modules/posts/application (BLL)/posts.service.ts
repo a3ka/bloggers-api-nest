@@ -100,7 +100,7 @@ export class PostsService {
       content,
       blogId,
       blogName,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
       // createdAt: (+new Date()).toString(),
       // extendedLikesInfo: {
       //   likesCount: 0,

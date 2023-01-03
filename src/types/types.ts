@@ -6,7 +6,7 @@ export type BlogType = {
   name: string;
   description: string;
   websiteUrl: string;
-  createdAt?: Date;
+  createdAt?: string;
 };
 
 export type BlogsExtendedType = {
@@ -24,7 +24,7 @@ export type PostType = {
   content: string;
   blogId: string;
   blogName: string;
-  createdAt?: Date;
+  createdAt?: string;
   // createdAt?: string;
 };
 
@@ -76,7 +76,7 @@ export type CommentsType = {
   content: string;
   userId: string;
   userLogin: string;
-  createdAt: Date;
+  createdAt: string;
 };
 
 export type CommentsTypeDB = {
@@ -85,7 +85,7 @@ export type CommentsTypeDB = {
   content: string;
   userId: string;
   userLogin: string;
-  createdAt: Date;
+  createdAt: string;
 };
 
 export type CommentsExtendedType = {

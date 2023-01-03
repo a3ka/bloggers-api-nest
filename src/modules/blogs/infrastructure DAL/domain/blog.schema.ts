@@ -17,7 +17,7 @@ export class Blog {
   websiteUrl: string;
 
   @Prop()
-  createdAt: Date;
+  createdAt: string;
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
