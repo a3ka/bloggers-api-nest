@@ -12,12 +12,14 @@ import {
 import { UsersService } from '../application (BLL)/users.service';
 import { CreateUserDTO } from './dto/user.dto';
 import { BasicAuthGuard } from '../../auth/api/guards/basic-auth.guard';
+import { BasicGuards } from '../../auth/api/guards/basic.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(protected usersService: UsersService) {}
 
   // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicGuards)
   @Get()
   async getAllUsers(
     @Query()
