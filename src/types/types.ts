@@ -62,7 +62,7 @@ export type UserDBType = {
     email: string;
     passwordHash: string;
     passwordSalt: string;
-    createdAt: Date;
+    createdAt: string;
     isConfirmed: boolean;
   };
   emailConfirmation: {

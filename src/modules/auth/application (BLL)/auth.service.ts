@@ -110,7 +110,7 @@ export class AuthService {
         email,
         passwordHash,
         passwordSalt,
-        createdAt: new Date(),
+        createdAt: new Date().toString(),
         isConfirmed: false,
       },
       emailConfirmation: {
