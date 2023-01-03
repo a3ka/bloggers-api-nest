@@ -45,7 +45,7 @@ export class BlogsController {
     return blogs;
   }
 
-  @UseGuards(BasicAuthGuard)
+  // @UseGuards(BasicAuthGuard)
   @Post()
   async createBlog(
     @Body() { name, description, websiteUrl }: CreateEditBlogDto,
