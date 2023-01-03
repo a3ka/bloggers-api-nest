@@ -17,7 +17,7 @@ import { BasicAuthGuard } from '../../auth/api/guards/basic-auth.guard';
 export class UsersController {
   constructor(protected usersService: UsersService) {}
 
-  @UseGuards(BasicAuthGuard)
+  // @UseGuards(BasicAuthGuard)
   @Get()
   async getAllUsers(
     @Query()
