@@ -40,7 +40,7 @@ export class AuthController {
     // @ts-ignore
     res.cookie('refreshToken', jwtTokenPair.refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
     });
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -140,7 +140,7 @@ export class AuthController {
     // @ts-ignore
     res.cookie('refreshToken', jwtTokenPair.refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
     });
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -154,8 +154,16 @@ export class AuthController {
     @Cookies('refreshToken')
     refreshToken: string,
   ) {
-    await this.authService.logout(refreshToken);
-
-    return true;
+    if (refreshToken) {
+      await this.authService.logout(refreshToken);
+      return true;
+    } else {
+      throw new BadRequestException([
+        {
+          message: 'Token is not provided',
+          field: 'refreshToken',
+        },
+      ]);
+    }
   }
 }

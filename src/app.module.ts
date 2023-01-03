@@ -32,7 +32,7 @@ import {
   AuthSchema,
 } from './modules/auth/infrastructure (DAL)/domain/auth.schema';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { LocalStrategy } from './modules/auth/api/strategies/local.strategy';
 import { JwtStrategy } from './modules/auth/api/strategies/jwt.strategy';
 import { GenerateHash } from './modules/common-services/generate-hash';
@@ -70,10 +70,10 @@ import { ConfigModule } from '@nestjs/config';
       { name: RefreshTokensBL.name, schema: refreshTokensBLSchema },
     ]),
     PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET || '123',
-      signOptions: { expiresIn: '5m' },
-    }),
+    // JwtModule.register({
+    //   // secret: process.env.JWT_SECRET || '123',
+    //   // signOptions: { expiresIn: '5m' },
+    // }),
     MailModule,
   ],
   controllers: [
@@ -100,6 +100,7 @@ import { ConfigModule } from '@nestjs/config';
     GenerateHash,
     LocalStrategy,
     JwtStrategy,
+    JwtService,
     BasicStrategy,
     // JwtCookiesStrategy,
     MailService,
