@@ -53,7 +53,18 @@ export class AuthController {
   async getProfile(@Request() req) {
     // const user = this.userRepo.findUserByLoginOrEmail(req.user.id);
     const user = this.usersRepository.findUserById(req.user.id);
-    return user;
+
+    if (user) {
+      return user;
+    } else {
+      // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      throw new BadRequestException([
+        {
+          message: 'the  access token should expired after 10 sec delay',
+          field: 'access token',
+        },
+      ]);
+    }
   }
 
   @HttpCode(204)
