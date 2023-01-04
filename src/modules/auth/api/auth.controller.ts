@@ -124,9 +124,11 @@ export class AuthController {
     @Cookies('refreshToken')
     refreshToken: string,
   ) {
+    debugger;
     const jwtTokenPair: boolean | TokenPairType =
       await this.authService.getRefreshAccessToken(null, refreshToken);
 
+    debugger;
     if (!jwtTokenPair) {
       throw new BadRequestException([
         {

@@ -53,15 +53,21 @@ export class AuthService {
     let payload;
     let userId;
     let tokenExpTime;
-
+    debugger;
     if (user) {
       payload = { sub: user.id };
     }
 
     if (rfToken) {
-      const result: any = await this.jwtService.verify(rfToken, {
-        secret: process.env.JWT_SECRET || '123',
-      });
+      let result;
+      try {
+        result = await this.jwtService.verify(rfToken, {
+          secret: process.env.JWT_SECRET || '123',
+        });
+      } catch (e) {
+        return false;
+      }
+
       userId = result.sub;
       tokenExpTime = result.exp;
       const blacklist = await this.queryRepository.checkRFTokenInBlacklist(
