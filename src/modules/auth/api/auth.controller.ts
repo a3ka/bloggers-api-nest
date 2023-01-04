@@ -171,7 +171,7 @@ export class AuthController {
       );
     const result = await this.authService.logout(refreshToken);
     debugger;
-    if (!result)
+    if (!result) {
       throw new BadRequestException([
         {
           message:
@@ -179,6 +179,7 @@ export class AuthController {
           field: '',
         },
       ]);
+    }
     return true;
   }
 }
