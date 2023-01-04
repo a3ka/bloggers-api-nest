@@ -178,10 +178,14 @@ export class AuthService {
   }
 
   async logout(rfToken: string): Promise<boolean | TokenPairType> {
-    const tokenData: any = await this.jwtService.verify(rfToken, {
-      secret: process.env.JWT_SECRET || '123',
-    });
-    debugger;
+    let tokenData;
+    try {
+      tokenData = await this.jwtService.verify(rfToken, {
+        secret: process.env.JWT_SECRET || '123',
+      });
+    } catch (e) {
+      return false;
+    }
     const tokenExpTime = tokenData.exp;
     const blacklist = await this.queryRepository.checkRFTokenInBlacklist(
       rfToken,
@@ -194,5 +198,21 @@ export class AuthService {
     await this.queryRepository.addRFTokenToBlacklist(rfToken);
 
     return true;
+  }
+
+  async getProfile(userId: string): Promise<boolean | UsersType> {
+    debugger;
+    const user = await this.usersRepository.findUserById(userId);
+
+    if (user) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      user._doc.userId = user._doc.id;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      delete user._doc.id;
+      return user;
+    }
+    return false;
   }
 }

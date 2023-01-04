@@ -50,29 +50,6 @@ export class AuthController {
     return { accessToken: jwtTokenPair.accessToken };
   }
 
-  @HttpCode(200)
-  @UseGuards(JwtAuthGuard)
-  @Get('/me')
-  async getProfile(@Request() req) {
-    // const user = this.userRepo.findUserByLoginOrEmail(req.user.id);
-    const user = await this.usersRepository.findUserById(req.user.id);
-
-    user.userId = user.id;
-    delete user.id;
-
-    if (user) {
-      return user;
-    } else {
-      // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-      throw new BadRequestException([
-        {
-          message: 'the  access token should expired after 10 sec delay',
-          field: 'access token',
-        },
-      ]);
-    }
-  }
-
   @HttpCode(204)
   @Post('/registration')
   async registration(
@@ -155,31 +132,40 @@ export class AuthController {
   }
 
   @HttpCode(204)
-  // @UseGuards(JwtCookiesAuthGuard)
   @Post('/logout')
   async logout(
     @Cookies('refreshToken')
     refreshToken: string,
   ) {
-    debugger;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if (!refreshToken.exp)
-      throw new HttpException(
-        'refreshToken is timeout',
-        HttpStatus.UNAUTHORIZED,
-      );
     const result = await this.authService.logout(refreshToken);
-    debugger;
     if (!result) {
-      throw new BadRequestException([
+      throw new UnauthorizedException([
         {
-          message:
-            'Your confirmation code is incorrect, expired or already been applied',
-          field: '',
+          message: 'Your token is incorrect, expired or in the blacklist',
+          field: 'refreshToken',
         },
       ]);
     }
     return true;
+  }
+
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  @Get('/me')
+  async getProfile(@Request() req) {
+    debugger;
+    const user = await this.authService.getProfile(req.user.id);
+    debugger;
+    if (user) {
+      return user;
+    } else {
+      // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      throw new BadRequestException([
+        {
+          message: 'the  access token should expire after 10 sec delay',
+          field: 'access token',
+        },
+      ]);
+    }
   }
 }
