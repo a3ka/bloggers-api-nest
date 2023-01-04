@@ -8,6 +8,9 @@ import {
   HttpCode,
   BadRequestException,
   Res,
+  UnauthorizedException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from '../application (BLL)/auth.service';
@@ -127,13 +130,12 @@ export class AuthController {
     @Cookies('refreshToken')
     refreshToken: string,
   ) {
-    debugger;
     const jwtTokenPair: boolean | TokenPairType =
       await this.authService.getRefreshAccessToken(null, refreshToken);
 
-    debugger;
     if (!jwtTokenPair) {
-      throw new BadRequestException([
+      // throw new HttpException('dfgdg', HttpStatus.UNAUTHORIZED);
+      throw new UnauthorizedException([
         {
           message: 'Your token is incorrect, expired or in the blacklist',
           field: 'refreshToken',
