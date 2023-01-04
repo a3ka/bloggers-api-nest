@@ -52,7 +52,10 @@ export class AuthController {
   @Get('/me')
   async getProfile(@Request() req) {
     // const user = this.userRepo.findUserByLoginOrEmail(req.user.id);
-    const user = this.usersRepository.findUserById(req.user.id);
+    const user = await this.usersRepository.findUserById(req.user.id);
+
+    user.userId = user.id;
+    delete user.id;
 
     if (user) {
       return user;

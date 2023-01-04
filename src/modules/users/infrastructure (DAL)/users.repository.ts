@@ -165,7 +165,14 @@ export class UsersRepository {
   async findUserById(userId: string): Promise<UsersType> {
     const user = await this.UsersModel.findOne(
       { id: userId },
-      { _id: 0, passwordHash: 0, passwordSalt: 0, isConfirmed: 0, __v: 0 },
+      {
+        _id: 0,
+        passwordHash: 0,
+        passwordSalt: 0,
+        createdAt: 0,
+        isConfirmed: 0,
+        __v: 0,
+      },
     );
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

@@ -37,6 +37,7 @@ export type PostsExtendedType = {
 };
 
 export type UsersType = {
+  userId?: string;
   id?: string;
   login: string;
   email?: string;
