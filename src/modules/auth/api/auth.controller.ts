@@ -43,7 +43,7 @@ export class AuthController {
     // @ts-ignore
     res.cookie('refreshToken', jwtTokenPair.refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
     });
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -147,7 +147,7 @@ export class AuthController {
     // @ts-ignore
     res.cookie('refreshToken', jwtTokenPair.refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
     });
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -161,16 +161,24 @@ export class AuthController {
     @Cookies('refreshToken')
     refreshToken: string,
   ) {
-    if (refreshToken) {
-      await this.authService.logout(refreshToken);
-      return true;
-    } else {
+    debugger;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (!refreshToken.exp)
+      throw new HttpException(
+        'refreshToken is timeout',
+        HttpStatus.UNAUTHORIZED,
+      );
+    const result = await this.authService.logout(refreshToken);
+    debugger;
+    if (!result)
       throw new BadRequestException([
         {
-          message: 'Token is not provided',
-          field: 'refreshToken',
+          message:
+            'Your confirmation code is incorrect, expired or already been applied',
+          field: '',
         },
       ]);
-    }
+    return true;
   }
 }
