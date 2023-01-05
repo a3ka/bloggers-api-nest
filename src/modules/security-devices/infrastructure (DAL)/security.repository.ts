@@ -25,6 +25,16 @@ export class SecurityRepository {
     );
   }
 
+  async findCurrentSession2(userId: string, title: string) {
+    return this.SessionModel.findOne(
+      {
+        userId,
+        title,
+      },
+      { _id: 0, __v: 0 },
+    );
+  }
+
   async findAllUserSessions(userId: string) {
     return this.SessionModel.find(
       {

@@ -49,14 +49,17 @@ export class AuthService {
   async getRefreshAccessToken(
     user: any,
     rfToken: string,
+    userIp: string,
+    title: string,
     lastActiveDate: string,
+    deviceId?: string,
   ): Promise<boolean | TokenPairType> {
     let payload;
     let userId;
     let tokenExpTime;
 
     if (user) {
-      payload = { sub: user.id, lastActiveDate };
+      payload = { sub: user.id, userIp, title, lastActiveDate, deviceId };
     }
 
     if (rfToken) {
@@ -71,6 +74,8 @@ export class AuthService {
 
       userId = result.sub;
       tokenExpTime = result.exp;
+      const deviceId = result.deviceId;
+
       const blacklist = await this.queryRepository.checkRFTokenInBlacklist(
         rfToken,
       );
@@ -78,7 +83,7 @@ export class AuthService {
       if (!result) return false;
       if (!tokenExpTime) return false;
 
-      payload = { sub: userId, lastActiveDate };
+      payload = { sub: userId, userIp, title, lastActiveDate, deviceId };
 
       await this.queryRepository.addRFTokenToBlacklist(rfToken);
     }

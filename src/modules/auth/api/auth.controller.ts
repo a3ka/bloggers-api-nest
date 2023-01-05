@@ -22,6 +22,7 @@ import { TokenPairType } from '../../../types/types';
 import { UserIp } from '../../../decorators/user-ip.decorator';
 import { SecurityService } from '../../security-devices/application (BLL)/security.service';
 import { DeviceName } from '../../../decorators/device-name.decorator';
+import { v4 as uuidv4 } from 'uuid';
 
 @Controller('auth')
 export class AuthController {
@@ -41,18 +42,22 @@ export class AuthController {
     @DeviceName() title: string,
   ) {
     const lastActiveDate = new Date().toISOString();
-
+    const deviceId = uuidv4();
     await this.securityService.createSession(
       req.user._doc.id,
       userIp,
       title,
       lastActiveDate,
+      deviceId,
     );
 
     const jwtTokenPair = await this.authService.getRefreshAccessToken(
       req.user._doc,
       null,
+      userIp,
+      title,
       lastActiveDate,
+      deviceId,
     );
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -83,13 +88,14 @@ export class AuthController {
       userIp,
       title,
       lastActiveDate,
-      refreshToken,
     );
 
     const jwtTokenPair: boolean | TokenPairType =
       await this.authService.getRefreshAccessToken(
         null,
         refreshToken,
+        userIp,
+        title,
         lastActiveDate,
       );
 

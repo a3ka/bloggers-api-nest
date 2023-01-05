@@ -4,7 +4,6 @@ import { QueryRepository } from '../../../queryRepository/query.repository';
 import { JwtService } from '@nestjs/jwt';
 import { SessionType, UsersType } from '../../../types/types';
 import { UsersRepository } from '../../users/infrastructure (DAL)/users.repository';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class SecurityService {
@@ -20,15 +19,23 @@ export class SecurityService {
     ip: string,
     title: string,
     lastActiveDate: string,
+    deviceId?: string,
     rfToken?: string,
   ) {
     if (userId) {
+      const currentSession = await this.securityRepository.findCurrentSession2(
+        userId,
+        title,
+      );
+
+      if (!currentSession) return false;
+
       const newSession = {
         userId,
         ip,
         title,
         lastActiveDate,
-        deviceId: uuidv4(),
+        deviceId,
       };
 
       return this.securityRepository.createNewSession(newSession);
@@ -57,8 +64,6 @@ export class SecurityService {
 
       if (!currentSession) return false;
 
-      // await this.queryRepository.addRFTokenToBlacklist(rfToken);
-
       await this.securityRepository.updateSession(
         result.sub,
         ip,
@@ -71,10 +76,12 @@ export class SecurityService {
   }
 
   async getAllSessions(rfToken: string): Promise<boolean | SessionType[]> {
+    debugger;
     const tokenData = await this.checkRefreshToken(rfToken);
     const allUserSessions = await this.securityRepository.findAllUserSessions(
       tokenData.sub,
     );
+    debugger;
     if (allUserSessions) return allUserSessions;
     return false;
   }
