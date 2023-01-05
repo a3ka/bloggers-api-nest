@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Types } from 'mongoose';
 import { SecurityRepository } from '../infrastructure (DAL)/security.repository';
 import { QueryRepository } from '../../../queryRepository/query.repository';
-import { GenerateHash } from '../../common-services/generate-hash';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -20,6 +18,7 @@ export class SecurityService {
     lastActiveDate: string,
     rfToken?: string,
   ) {
+    debugger;
     if (userId) {
       const newSession = {
         userId,
@@ -50,11 +49,12 @@ export class SecurityService {
       const currentSession = await this.securityRepository.findCurrentSession(
         result.sub,
         result.lastActiveDate,
+        title,
       );
 
       if (!currentSession) return false;
 
-      await this.queryRepository.addRFTokenToBlacklist(rfToken);
+      // await this.queryRepository.addRFTokenToBlacklist(rfToken);
 
       await this.securityRepository.updateSession(
         result.sub,

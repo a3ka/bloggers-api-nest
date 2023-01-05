@@ -42,6 +42,14 @@ export class AuthController {
   ) {
     const lastActiveDate = new Date().toISOString();
 
+    debugger;
+    await this.securityService.createSession(
+      req.user._doc.id,
+      userIp,
+      title,
+      lastActiveDate,
+    );
+
     const jwtTokenPair = await this.authService.getRefreshAccessToken(
       req.user._doc,
       null,
@@ -55,13 +63,54 @@ export class AuthController {
       secure: true,
     });
 
+    debugger;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return { accessToken: jwtTokenPair.accessToken };
+  }
+
+  @HttpCode(200)
+  // @UseGuards(JwtCookiesAuthGuard)
+  @Post('/refresh-token')
+  async getNewRefreshAccessToken(
+    @UserIp() userIp: string,
+    @DeviceName() title: string,
+    @Res({ passthrough: true }) res: Response,
+    @Cookies('refreshToken') refreshToken: string,
+  ) {
+    const lastActiveDate = new Date().toISOString();
+    ///fdsadfafafas
     await this.securityService.createSession(
-      req.user._doc.id,
+      undefined,
       userIp,
       title,
       lastActiveDate,
+      refreshToken,
     );
 
+    const jwtTokenPair: boolean | TokenPairType =
+      await this.authService.getRefreshAccessToken(
+        null,
+        refreshToken,
+        lastActiveDate,
+      );
+
+    if (!jwtTokenPair) {
+      // throw new HttpException('dfgdg', HttpStatus.UNAUTHORIZED);
+      throw new UnauthorizedException([
+        {
+          message: 'Your token is incorrect, expired or in the blacklist',
+          field: 'refreshToken',
+        },
+      ]);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    res.cookie('refreshToken', jwtTokenPair.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return { accessToken: jwtTokenPair.accessToken };
@@ -114,53 +163,6 @@ export class AuthController {
   @Post('/registration-email-resending')
   async resendingConfirmCode(@Body() dto: ResendCodeDTO) {
     return await this.authService.resendEmailWithConfirmCode(dto.email);
-  }
-
-  @HttpCode(200)
-  // @UseGuards(JwtCookiesAuthGuard)
-  @Post('/refresh-token')
-  async getNewRefreshAccessToken(
-    @UserIp() userIp: string,
-    @DeviceName() title: string,
-    @Res({ passthrough: true }) res: Response,
-    @Cookies('refreshToken') refreshToken: string,
-  ) {
-    const lastActiveDate = new Date().toISOString();
-    ///fdsadfafafas
-    await this.securityService.createSession(
-      undefined,
-      userIp,
-      title,
-      lastActiveDate,
-      refreshToken,
-    );
-
-    const jwtTokenPair: boolean | TokenPairType =
-      await this.authService.getRefreshAccessToken(
-        null,
-        refreshToken,
-        lastActiveDate,
-      );
-
-    if (!jwtTokenPair) {
-      // throw new HttpException('dfgdg', HttpStatus.UNAUTHORIZED);
-      throw new UnauthorizedException([
-        {
-          message: 'Your token is incorrect, expired or in the blacklist',
-          field: 'refreshToken',
-        },
-      ]);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    res.cookie('refreshToken', jwtTokenPair.refreshToken, {
-      httpOnly: true,
-      secure: true,
-    });
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return { accessToken: jwtTokenPair.accessToken };
   }
 
   @HttpCode(204)

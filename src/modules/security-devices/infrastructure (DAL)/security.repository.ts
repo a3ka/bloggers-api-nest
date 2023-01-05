@@ -10,11 +10,16 @@ export class SecurityRepository {
     @InjectModel(Session.name) private SessionModel: Model<SessionDocument>,
   ) {}
 
-  async findCurrentSession(userId: string, lastActiveDate: string) {
+  async findCurrentSession(
+    userId: string,
+    lastActiveDate: string,
+    title: string,
+  ) {
     return this.SessionModel.findOne(
       {
         userId,
         lastActiveDate,
+        title,
       },
       { _id: 0, userId: 0, __v: 0 },
     );
