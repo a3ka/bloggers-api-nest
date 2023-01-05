@@ -101,3 +101,11 @@ export type TokenPairType = {
   accessToken: string;
   refreshToken: string;
 };
+
+export type SessionType = {
+  userId?: string;
+  ip: string;
+  title: string;
+  lastActiveDate: string;
+  deviceId: string;
+};

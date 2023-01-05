@@ -4,6 +4,7 @@ import { PostsRepository } from '../posts/infrastructure (DAL)/posts.repository'
 import { UsersRepository } from '../users/infrastructure (DAL)/users.repository';
 import { CommentsRepository } from '../comments/infrastructure (DAL)/comments.repository';
 import { QueryRepository } from '../../queryRepository/query.repository';
+import { SecurityRepository } from '../security-devices/infrastructure (DAL)/security.repository';
 
 @Controller('testing')
 export class TestingController {
@@ -13,6 +14,7 @@ export class TestingController {
     protected usersRepository: UsersRepository,
     protected commentsRepository: CommentsRepository,
     protected queryRepository: QueryRepository,
+    protected securityRepository: SecurityRepository,
   ) {}
 
   @HttpCode(204)
@@ -23,5 +25,6 @@ export class TestingController {
     await this.blogsRepository.deleteAllBlogs();
     await this.commentsRepository.deleteAllComments();
     await this.queryRepository.deleteAllTokensInBlackList();
+    await this.securityRepository.deleteAllTEntities();
   }
 }

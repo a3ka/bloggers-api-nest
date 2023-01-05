@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Session, SessionDocument } from './domain/session.schema';
-import { UsersType } from '../../../types/types';
+import { SessionType, UsersType } from '../../../types/types';
 
 @Injectable()
 export class SecurityRepository {
@@ -21,8 +21,31 @@ export class SecurityRepository {
         lastActiveDate,
         title,
       },
-      { _id: 0, userId: 0, __v: 0 },
+      { _id: 0, __v: 0 },
     );
+  }
+
+  async findAllUserSessions(userId: string) {
+    return this.SessionModel.find(
+      {
+        userId,
+      },
+      { _id: 0, userId: 0, __v: 0 },
+    ).lean();
+  }
+
+  async findSessionByItId(sessionId: string): Promise<SessionType> {
+    return this.SessionModel.findOne(
+      {
+        deviceId: sessionId,
+      },
+      { _id: 0, __v: 0 },
+    );
+  }
+
+  async userSessionsCount(userId: string) {
+    const sessionsCount = await this.SessionModel.count({ userId });
+    return sessionsCount;
   }
 
   async createNewSession(newSession: any): Promise<boolean> {
@@ -46,5 +69,22 @@ export class SecurityRepository {
       },
     );
     return result.matchedCount === 1;
+  }
+
+  async deleteAllUserSessions(userId: string): Promise<boolean> {
+    const result = await this.SessionModel.deleteMany({ userId });
+    return true;
+  }
+
+  async deleteSessionById(sessionId: string): Promise<boolean> {
+    const result = await this.SessionModel.deleteOne({
+      deviceId: sessionId,
+    });
+    return result.deletedCount === 1;
+  }
+
+  async deleteAllTEntities(): Promise<boolean> {
+    const result = await this.SessionModel.deleteMany({});
+    return true;
   }
 }
