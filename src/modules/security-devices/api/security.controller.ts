@@ -29,7 +29,6 @@ export class SecurityController {
   @Get('/devices')
   async getAllSessions(@Request() req) {
     const user = await this.securityService.getAllSessions(req.user.id);
-    debugger;
     if (user) {
       return user;
     } else {

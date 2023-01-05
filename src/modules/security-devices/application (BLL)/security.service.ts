@@ -22,7 +22,6 @@ export class SecurityService {
     lastActiveDate: string,
     rfToken?: string,
   ) {
-    debugger;
     if (userId) {
       const newSession = {
         userId,

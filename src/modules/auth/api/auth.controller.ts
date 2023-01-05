@@ -42,7 +42,6 @@ export class AuthController {
   ) {
     const lastActiveDate = new Date().toISOString();
 
-    debugger;
     await this.securityService.createSession(
       req.user._doc.id,
       userIp,
@@ -63,7 +62,6 @@ export class AuthController {
       secure: true,
     });
 
-    debugger;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return { accessToken: jwtTokenPair.accessToken };
@@ -187,9 +185,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('/me')
   async getProfile(@Request() req) {
-    debugger;
     const user = await this.authService.getProfile(req.user.id);
-    debugger;
     if (user) {
       return user;
     } else {
