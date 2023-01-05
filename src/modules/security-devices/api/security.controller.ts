@@ -27,7 +27,6 @@ export class SecurityController {
   @HttpCode(200)
   @Get('/devices')
   async getAllSessions(@Cookies('refreshToken') refreshToken: string) {
-    debugger;
     const allSessions = await this.securityService.getAllSessions(refreshToken);
     if (allSessions) {
       return allSessions;

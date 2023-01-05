@@ -76,12 +76,10 @@ export class SecurityService {
   }
 
   async getAllSessions(rfToken: string): Promise<boolean | SessionType[]> {
-    debugger;
     const tokenData = await this.checkRefreshToken(rfToken);
     const allUserSessions = await this.securityRepository.findAllUserSessions(
       tokenData.sub,
     );
-    debugger;
     if (allUserSessions) return allUserSessions;
     return false;
   }
