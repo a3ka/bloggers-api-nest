@@ -49,12 +49,14 @@ export class AuthService {
   async getRefreshAccessToken(
     user: any,
     rfToken: string,
+    lastActiveDate: string,
   ): Promise<boolean | TokenPairType> {
     let payload;
     let userId;
     let tokenExpTime;
+
     if (user) {
-      payload = { sub: user.id };
+      payload = { sub: user.id, lastActiveDate };
     }
 
     if (rfToken) {
@@ -76,7 +78,7 @@ export class AuthService {
       if (!result) return false;
       if (!tokenExpTime) return false;
 
-      payload = { sub: userId };
+      payload = { sub: userId, lastActiveDate };
 
       await this.queryRepository.addRFTokenToBlacklist(rfToken);
     }
@@ -201,7 +203,6 @@ export class AuthService {
   }
 
   async getProfile(userId: string): Promise<boolean | UsersType> {
-    debugger;
     const user = await this.usersRepository.findUserById(userId);
 
     if (user) {

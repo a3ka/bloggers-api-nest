@@ -19,24 +19,33 @@ import { UsersRepository } from '../../users/infrastructure (DAL)/users.reposito
 import { ConfirmCodeDTO, RegistrationDTO, ResendCodeDTO } from './dto/auth.dto';
 import { Cookies } from '../../../decorators/cookies-parser.decorator';
 import { TokenPairType } from '../../../types/types';
+import { UserIp } from '../../../decorators/user-ip.decorator';
+import { SecurityService } from '../../security-devices/application (BLL)/security.service';
+import { DeviceName } from '../../../decorators/device-name.decorator';
 
 @Controller('auth')
 export class AuthController {
   // constructor(protected login: AuthLoginUC, protected jwtService: JwtService) {}
   constructor(
-    protected usersRepository: UsersRepository,
     protected authService: AuthService,
+    protected securityService: SecurityService,
   ) {}
 
   @HttpCode(200)
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Request() req, @Res({ passthrough: true }) res: Response) {
-    // const jwtTokenPair = await this.authService.login(req.user._doc);
+  async login(
+    @Request() req,
+    @Res({ passthrough: true }) res: Response,
+    @UserIp() userIp: string,
+    @DeviceName() title: string,
+  ) {
+    const lastActiveDate = new Date().toISOString();
 
     const jwtTokenPair = await this.authService.getRefreshAccessToken(
       req.user._doc,
       null,
+      lastActiveDate,
     );
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -45,6 +54,14 @@ export class AuthController {
       httpOnly: true,
       secure: true,
     });
+
+    await this.securityService.createSession(
+      req.user._doc.id,
+      userIp,
+      title,
+      lastActiveDate,
+    );
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return { accessToken: jwtTokenPair.accessToken };
@@ -103,12 +120,27 @@ export class AuthController {
   // @UseGuards(JwtCookiesAuthGuard)
   @Post('/refresh-token')
   async getNewRefreshAccessToken(
+    @UserIp() userIp: string,
+    @DeviceName() title: string,
     @Res({ passthrough: true }) res: Response,
-    @Cookies('refreshToken')
-    refreshToken: string,
+    @Cookies('refreshToken') refreshToken: string,
   ) {
+    const lastActiveDate = new Date().toISOString();
+    ///fdsadfafafas
+    await this.securityService.createSession(
+      undefined,
+      userIp,
+      title,
+      lastActiveDate,
+      refreshToken,
+    );
+
     const jwtTokenPair: boolean | TokenPairType =
-      await this.authService.getRefreshAccessToken(null, refreshToken);
+      await this.authService.getRefreshAccessToken(
+        null,
+        refreshToken,
+        lastActiveDate,
+      );
 
     if (!jwtTokenPair) {
       // throw new HttpException('dfgdg', HttpStatus.UNAUTHORIZED);

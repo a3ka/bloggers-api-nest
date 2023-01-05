@@ -53,6 +53,13 @@ import {
 } from './queryRepository/refreshTokensBL.schema';
 import { QueryRepository } from './queryRepository/query.repository';
 import { ConfigModule } from '@nestjs/config';
+import {
+  Session,
+  SessionSchema,
+} from './modules/security-devices/infrastructure (DAL)/domain/session.schema';
+import { SecurityController } from './modules/security-devices/api/security.controller';
+import { SecurityService } from './modules/security-devices/application (BLL)/security.service';
+import { SecurityRepository } from './modules/security-devices/infrastructure (DAL)/security.repository';
 
 @Module({
   imports: [
@@ -68,6 +75,7 @@ import { ConfigModule } from '@nestjs/config';
       { name: Auth.name, schema: AuthSchema },
       { name: Comment.name, schema: CommentSchema },
       { name: RefreshTokensBL.name, schema: refreshTokensBLSchema },
+      { name: Session.name, schema: SessionSchema },
     ]),
     PassportModule,
     // JwtModule.register({
@@ -84,6 +92,7 @@ import { ConfigModule } from '@nestjs/config';
     UsersController,
     AuthController,
     CommentsController,
+    SecurityController,
   ],
   providers: [
     AppService,
@@ -104,6 +113,8 @@ import { ConfigModule } from '@nestjs/config';
     BasicStrategy,
     // JwtCookiesStrategy,
     MailService,
+    SecurityService,
+    SecurityRepository,
   ],
 })
 export class AppModule {}
