@@ -25,12 +25,12 @@ export class SecurityController {
   ) {}
 
   @HttpCode(200)
-  @UseGuards(JwtAuthGuard)
   @Get('/devices')
-  async getAllSessions(@Request() req) {
-    const user = await this.securityService.getAllSessions(req.user.id);
-    if (user) {
-      return user;
+  async getAllSessions(@Cookies('refreshToken') refreshToken: string) {
+    debugger;
+    const allSessions = await this.securityService.getAllSessions(refreshToken);
+    if (allSessions) {
+      return allSessions;
     } else {
       // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
       throw new BadRequestException([
@@ -43,7 +43,6 @@ export class SecurityController {
   }
 
   @HttpCode(204)
-  @UseGuards(JwtAuthGuard)
   @Delete('/devices')
   async deleteAllOtherSessions(
     @Cookies('refreshToken') refreshToken: string,
@@ -65,23 +64,21 @@ export class SecurityController {
   }
 
   @HttpCode(204)
-  @UseGuards(JwtAuthGuard)
   @Delete('/devices/:sessionId')
   async deleteSessionById(
     @Cookies('refreshToken') refreshToken: string,
     @Param('sessionId') sessionId: string,
-    @Request() req,
   ) {
     const session = await this.securityRepository.findSessionByItId(sessionId);
+    const tokenData = await this.securityService.checkRefreshToken(
+      refreshToken,
+    );
 
-    if (session.userId !== req.user.id) {
+    if (session.userId !== tokenData.sub) {
       throw new HttpException('dfgdg', HttpStatus.FORBIDDEN);
     }
 
-    const result = await this.securityService.deleteSessionById(
-      refreshToken,
-      sessionId,
-    );
+    const result = await this.securityService.deleteSessionById(sessionId);
 
     if (result) {
       return true;

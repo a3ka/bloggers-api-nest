@@ -70,9 +70,10 @@ export class SecurityService {
     }
   }
 
-  async getAllSessions(userId: string): Promise<boolean | SessionType[]> {
+  async getAllSessions(rfToken: string): Promise<boolean | SessionType[]> {
+    const tokenData = await this.checkRefreshToken(rfToken);
     const allUserSessions = await this.securityRepository.findAllUserSessions(
-      userId,
+      tokenData.sub,
     );
     if (allUserSessions) return allUserSessions;
     return false;
@@ -117,16 +118,8 @@ export class SecurityService {
     return false;
   }
 
-  async deleteSessionById(
-    rfToken: string,
-    sessionId: string,
-  ): Promise<boolean> {
-    const tokenData = await this.checkRefreshToken(rfToken);
-
-    // tokenData.sub, tokenData.lastActiveDate;
-
+  async deleteSessionById(sessionId: string): Promise<boolean> {
     const result = await this.securityRepository.deleteSessionById(sessionId);
-
     if (result) return true;
     return false;
   }
