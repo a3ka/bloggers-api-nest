@@ -78,19 +78,26 @@ export class SecurityController {
       throw new HttpException('Id not found', HttpStatus.NOT_FOUND);
     }
 
-    if (session.userId !== tokenData.sub) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    }
-
-    const result = await this.securityService.deleteSessionById(sessionId);
-
-    if (result) {
-      return true;
-    } else {
-      //404
+    if (!tokenData) {
       throw new UnauthorizedException([
         { message: 'Post with that Id was not found', field: 'postId' },
       ]);
     }
+
+    if (session.userId !== tokenData.sub) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    return await this.securityService.deleteSessionById(sessionId);
+
+    // const result = await this.securityService.deleteSessionById(sessionId);
+
+    // if (result) {
+    //   return true;
+    // } else {
+    //   throw new UnauthorizedException([
+    //     { message: 'Post with that Id was not found', field: 'postId' },
+    //   ]);
+    // }
   }
 }
