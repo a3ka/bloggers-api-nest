@@ -41,6 +41,7 @@ export class AuthController {
     @UserIp() userIp: string,
     @DeviceName() title: string,
   ) {
+    console.log('UserIP: ', userIp);
     const lastActiveDate = new Date().toISOString();
     const deviceId = uuidv4();
     await this.securityService.createSession(
