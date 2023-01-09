@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Param,
   Request,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { SecurityService } from '../application (BLL)/security.service';
@@ -74,11 +75,11 @@ export class SecurityController {
     );
 
     if (!session) {
-      throw new HttpException('dfgdg', HttpStatus.FORBIDDEN);
+      throw new HttpException('Id not found', HttpStatus.NOT_FOUND);
     }
 
     if (session.userId !== tokenData.sub) {
-      throw new HttpException('dfgdg', HttpStatus.FORBIDDEN);
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
 
     const result = await this.securityService.deleteSessionById(sessionId);
@@ -87,7 +88,7 @@ export class SecurityController {
       return true;
     } else {
       //404
-      throw new BadRequestException([
+      throw new UnauthorizedException([
         { message: 'Post with that Id was not found', field: 'postId' },
       ]);
     }
