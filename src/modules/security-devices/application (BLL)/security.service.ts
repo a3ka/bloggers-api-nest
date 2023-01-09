@@ -22,13 +22,15 @@ export class SecurityService {
     deviceId?: string,
     rfToken?: string,
   ) {
+    debugger;
     if (userId) {
-      const currentSession = await this.securityRepository.findCurrentSession2(
-        userId,
-        title,
-      );
-
-      if (!currentSession) return false;
+      // const currentSession = await this.securityRepository.findCurrentSession2(
+      //   userId,
+      //   title,
+      // );
+      //
+      // debugger;
+      // if (!currentSession) return false;
 
       const newSession = {
         userId,

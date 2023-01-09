@@ -41,9 +41,9 @@ export class AuthController {
     @UserIp() userIp: string,
     @DeviceName() title: string,
   ) {
-    console.log('UserIP: ', userIp);
     const lastActiveDate = new Date().toISOString();
     const deviceId = uuidv4();
+    debugger;
     await this.securityService.createSession(
       req.user._doc.id,
       userIp,
@@ -65,7 +65,7 @@ export class AuthController {
     // @ts-ignore
     res.cookie('refreshToken', jwtTokenPair.refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
     });
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -114,7 +114,7 @@ export class AuthController {
     // @ts-ignore
     res.cookie('refreshToken', jwtTokenPair.refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
     });
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
