@@ -66,10 +66,10 @@ export class SecurityController {
   }
 
   @HttpCode(204)
-  @Delete('/devices/:sessionId')
+  @Delete('/devices/:deviceId')
   async deleteSessionById(
     @Cookies('refreshToken') refreshToken: string,
-    @Param('sessionId') sessionId: string,
+    @Param('deviceId') sessionId: string,
   ) {
     const session = await this.securityRepository.findSessionByItId(sessionId);
     const tokenData = await this.securityService.checkRefreshToken(
