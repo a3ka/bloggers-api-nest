@@ -22,7 +22,6 @@ export class SecurityService {
     deviceId?: string,
     rfToken?: string,
   ) {
-    debugger;
     if (userId) {
       // const currentSession = await this.securityRepository.findCurrentSession2(
       //   userId,

@@ -26,7 +26,6 @@ export class SecurityRepository {
   }
 
   async findCurrentSession2(userId: string, title: string) {
-    debugger;
     const result = await this.SessionModel.findOne(
       {
         userId,
