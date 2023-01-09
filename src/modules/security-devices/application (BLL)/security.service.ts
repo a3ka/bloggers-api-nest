@@ -108,8 +108,11 @@ export class SecurityService {
   }
 
   async logoutOfSession(rfToken: string): Promise<boolean | TokenPairType> {
+    debugger;
     const tokenData = await this.checkRefreshToken(rfToken);
-    return await this.deleteSessionById(tokenData.sessionId);
+    debugger;
+    const result = await this.deleteSessionById(tokenData.deviceId);
+    return result;
   }
 
   async deleteSessionById(sessionId: string): Promise<boolean> {

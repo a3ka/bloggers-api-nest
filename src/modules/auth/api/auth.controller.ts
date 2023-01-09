@@ -175,9 +175,11 @@ export class AuthController {
     @Cookies('refreshToken')
     refreshToken: string,
   ) {
+    debugger;
     const logoutOfSession = await this.securityService.logoutOfSession(
       refreshToken,
     );
+    debugger;
     if (!logoutOfSession)
       throw new UnauthorizedException([
         {
@@ -186,7 +188,9 @@ export class AuthController {
         },
       ]);
 
+    debugger;
     const logoutOfTokens = await this.authService.logout(refreshToken);
+    debugger;
     if (!logoutOfTokens) {
       throw new UnauthorizedException([
         {

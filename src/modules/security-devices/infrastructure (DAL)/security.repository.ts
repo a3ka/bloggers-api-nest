@@ -89,6 +89,7 @@ export class SecurityRepository {
   }
 
   async deleteSessionById(sessionId: string): Promise<boolean> {
+    debugger;
     const result = await this.SessionModel.deleteOne({
       deviceId: sessionId,
     });
