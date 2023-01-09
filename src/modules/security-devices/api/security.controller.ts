@@ -73,6 +73,10 @@ export class SecurityController {
       refreshToken,
     );
 
+    if (!session) {
+      throw new HttpException('dfgdg', HttpStatus.FORBIDDEN);
+    }
+
     if (session.userId !== tokenData.sub) {
       throw new HttpException('dfgdg', HttpStatus.FORBIDDEN);
     }
