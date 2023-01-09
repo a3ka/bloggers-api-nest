@@ -64,7 +64,7 @@ export class AuthController {
     // @ts-ignore
     res.cookie('refreshToken', jwtTokenPair.refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
     });
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -113,7 +113,7 @@ export class AuthController {
     // @ts-ignore
     res.cookie('refreshToken', jwtTokenPair.refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
     });
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
