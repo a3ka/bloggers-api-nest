@@ -15,7 +15,7 @@ export class SecurityRepository {
     lastActiveDate: string,
     title: string,
   ) {
-    return this.SessionModel.findOne(
+    const result = await this.SessionModel.findOne(
       {
         userId,
         lastActiveDate,
@@ -23,6 +23,7 @@ export class SecurityRepository {
       },
       { _id: 0, __v: 0 },
     );
+    return result;
   }
 
   async findCurrentSession2(userId: string, title: string) {

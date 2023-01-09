@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SecurityRepository } from '../infrastructure (DAL)/security.repository';
 import { QueryRepository } from '../../../queryRepository/query.repository';
 import { JwtService } from '@nestjs/jwt';
-import { SessionType, UsersType } from '../../../types/types';
+import { SessionType, TokenPairType, UsersType } from '../../../types/types';
 import { UsersRepository } from '../../users/infrastructure (DAL)/users.repository';
 
 @Injectable()
@@ -89,23 +89,7 @@ export class SecurityService {
     rfToken: string,
     title: string,
   ): Promise<boolean> {
-    let tokenData;
-    try {
-      tokenData = await this.jwtService.verify(rfToken, {
-        secret: process.env.JWT_SECRET || '123',
-      });
-    } catch (e) {
-      return false;
-    }
-
-    const tokenExpTime = tokenData.exp;
-    const blacklist = await this.queryRepository.checkRFTokenInBlacklist(
-      rfToken,
-    );
-
-    if (blacklist) return false;
-    if (!tokenData) return false;
-    if (!tokenExpTime) return false;
+    const tokenData = await this.checkRefreshToken(rfToken);
 
     const currentSession = await this.securityRepository.findCurrentSession(
       tokenData.sub,
@@ -115,13 +99,17 @@ export class SecurityService {
 
     await this.securityRepository.deleteAllUserSessions(tokenData.sub);
     await this.securityRepository.createNewSession(currentSession);
-
     const connectionsCount = await this.securityRepository.userSessionsCount(
       tokenData.sub,
     );
 
     if (connectionsCount === 1) return true;
     return false;
+  }
+
+  async logoutOfSession(rfToken: string): Promise<boolean | TokenPairType> {
+    const tokenData = await this.checkRefreshToken(rfToken);
+    return await this.deleteSessionById(tokenData.sessionId);
   }
 
   async deleteSessionById(sessionId: string): Promise<boolean> {

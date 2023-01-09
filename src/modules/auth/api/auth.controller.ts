@@ -175,8 +175,19 @@ export class AuthController {
     @Cookies('refreshToken')
     refreshToken: string,
   ) {
-    const result = await this.authService.logout(refreshToken);
-    if (!result) {
+    const logoutOfSession = await this.securityService.logoutOfSession(
+      refreshToken,
+    );
+    if (!logoutOfSession)
+      throw new UnauthorizedException([
+        {
+          message: 'Your token is incorrect, expired or in the blacklist',
+          field: 'refreshToken',
+        },
+      ]);
+
+    const logoutOfTokens = await this.authService.logout(refreshToken);
+    if (!logoutOfTokens) {
       throw new UnauthorizedException([
         {
           message: 'Your token is incorrect, expired or in the blacklist',
