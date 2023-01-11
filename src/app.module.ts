@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BlogsController } from './modules/blogs/api/blogs.controller';
@@ -60,6 +65,9 @@ import {
 import { SecurityController } from './modules/security-devices/api/security.controller';
 import { SecurityService } from './modules/security-devices/application (BLL)/security.service';
 import { SecurityRepository } from './modules/security-devices/infrastructure (DAL)/security.repository';
+import { CheckLimitsIPAttemptsMiddleware } from './middleware/checkLimitsIPAttempts.middleware';
+import { Attempt, AttemptSchema } from './queryRepository/attempts.schema';
+import { AttemptsRepository } from './queryRepository/attemps.repository.';
 
 @Module({
   imports: [
@@ -76,6 +84,7 @@ import { SecurityRepository } from './modules/security-devices/infrastructure (D
       { name: Comment.name, schema: CommentSchema },
       { name: RefreshTokensBL.name, schema: refreshTokensBLSchema },
       { name: Session.name, schema: SessionSchema },
+      { name: Attempt.name, schema: AttemptSchema },
     ]),
     PassportModule,
     // JwtModule.register({
@@ -115,6 +124,14 @@ import { SecurityRepository } from './modules/security-devices/infrastructure (D
     MailService,
     SecurityService,
     SecurityRepository,
+    AttemptsRepository,
   ],
 })
-export class AppModule {}
+// export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(CheckLimitsIPAttemptsMiddleware)
+      .forRoutes({ path: 'auth', method: RequestMethod.POST });
+  }
+}

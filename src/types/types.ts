@@ -109,3 +109,9 @@ export type SessionType = {
   lastActiveDate: string;
   deviceId: string;
 };
+
+export type AttemptType = {
+  userIP: string;
+  url: string;
+  time: Date;
+};
