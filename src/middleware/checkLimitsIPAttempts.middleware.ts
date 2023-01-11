@@ -1,7 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { AuthService } from '../modules/auth/application (BLL)/auth.service';
-import { SecurityService } from '../modules/security-devices/application (BLL)/security.service';
 import { AttemptsRepository } from '../queryRepository/attemps.repository.';
 
 const LIMIT_OF_ATTEMPTS = 10 * 1000;

@@ -10,7 +10,7 @@ export class Attempt {
   @Prop()
   url: string;
   @Prop()
-  time: string;
+  time: Date;
 }
 
 export const AttemptSchema = SchemaFactory.createForClass(Attempt);
