@@ -130,8 +130,19 @@ import { AttemptsRepository } from './queryRepository/attemps.repository.';
 // export class AppModule {}
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(CheckLimitsIPAttemptsMiddleware)
-      .forRoutes({ path: 'auth', method: RequestMethod.POST });
+    consumer.apply(CheckLimitsIPAttemptsMiddleware).forRoutes(
+      { path: '/auth/registration', method: RequestMethod.POST },
+      {
+        path: '/auth/registration-email-resending',
+        method: RequestMethod.POST,
+      },
+      {
+        path: '/auth/registration-confirmation',
+        method: RequestMethod.POST,
+      },
+      { path: '/auth/login', method: RequestMethod.POST },
+      { path: 'users/:id', method: RequestMethod.DELETE },
+      { path: 'refresh-token', method: RequestMethod.POST },
+    );
   }
 }
